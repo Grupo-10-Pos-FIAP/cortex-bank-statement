@@ -2,7 +2,7 @@
   "presets": [
     "@babel/preset-env",
     [
-      "@babel/preset-react", 
+      "@babel/preset-react",
       {
         "runtime": "automatic"
       }
@@ -14,17 +14,8 @@
       "@babel/plugin-transform-runtime",
       {
         "useESModules": true,
-        "regenerator": false
+        "regenerator": true
       }
     ]
-  ],
-  "env": {
-    "test": {
-      "presets": [
-        ["@babel/preset-env", {
-          "targets": "current node"
-        }]
-      ]
-    }
-  }
+  ]
 }

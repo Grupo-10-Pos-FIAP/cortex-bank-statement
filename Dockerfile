@@ -11,5 +11,5 @@ COPY . .
 ENV NODE_ENV=development
 ENV CHOKIDAR_USEPOLLING=true
 
-EXPOSE 3001
+EXPOSE 3004
 CMD ["npm", "start", "--", "--host", "0.0.0.0"]

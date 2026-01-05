@@ -2,9 +2,17 @@
   "extends": "ts-config-single-spa",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "files": ["src/cortex-bank-statement.tsx"],
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test*"]
+  "include": ["src/**/*", "src/declarations.d.ts", "vitest.config.ts", ".vitest.d.ts"],
+  "exclude": ["src/**/*.test*", "src/**/*.spec*"]
 }

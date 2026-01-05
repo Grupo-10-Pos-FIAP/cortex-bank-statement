@@ -5,6 +5,16 @@ import React from "react";
 
 // Mock completo do design-system para todos os testes
 vi.mock("@grupo10-pos-fiap/design-system", () => {
+  const CardSection = ({
+    children,
+    ...props
+  }: {
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) => React.createElement("div", { "data-testid": "card-section", ...props }, children);
+
+  CardSection.displayName = "Card.Section";
+
   const CardComponent = ({
     children,
     title,
@@ -21,16 +31,8 @@ vi.mock("@grupo10-pos-fiap/design-system", () => {
       children
     );
 
-  CardComponent.Section = ({
-    children,
-    ...props
-  }: {
-    children: React.ReactNode;
-    [key: string]: unknown;
-  }) => React.createElement("div", { "data-testid": "card-section", ...props }, children);
-
+  CardComponent.Section = CardSection;
   CardComponent.displayName = "Card";
-  CardComponent.Section.displayName = "Card.Section";
 
   const Text = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) =>
     React.createElement("div", { "data-testid": "text", ...props }, children);
