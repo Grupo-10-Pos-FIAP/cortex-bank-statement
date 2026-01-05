@@ -29,6 +29,7 @@ export function usePagination(
   }));
 
   const totalPages = useMemo(() => {
+    if (pagination.pageSize <= 0) return 0;
     return Math.ceil(totalItems / pagination.pageSize);
   }, [totalItems, pagination.pageSize]);
 
