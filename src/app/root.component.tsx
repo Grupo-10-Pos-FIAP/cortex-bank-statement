@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Text, Loading } from "@grupo10-pos-fiap/design-system";
 import { fetchAccount } from "@/api/statement.api";
+import { classifyError, AppError } from "@/utils/errorHandler";
+import ErrorMessage from "@/components/ErrorMessage";
 import Statement from "../Statement";
 import styles from "./root.component.module.css";
 
@@ -11,29 +13,44 @@ export interface RootProps {
 export default function Root(_props: RootProps) {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [loadingAccount, setLoadingAccount] = useState<boolean>(true);
+  const [error, setError] = useState<AppError | null>(null);
+
+  const loadAccount = useCallback(async () => {
+    try {
+      setError(null);
+      setLoadingAccount(true);
+      const accountData = await fetchAccount();
+
+      if (accountData.result.account && accountData.result.account.length > 0) {
+        setAccountId(accountData.result.account[0].id);
+      } else {
+        setAccountId(null);
+      }
+    } catch (err) {
+      const appError = classifyError(err);
+      setError(appError);
+      setAccountId(null);
+    } finally {
+      setLoadingAccount(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const loadAccount = async () => {
-      try {
-        const accountData = await fetchAccount();
-
-        if (accountData.result.account && accountData.result.account.length > 0) {
-          setAccountId(accountData.result.account[0].id);
-        }
-      } catch (error) {
-        // Error handling is done by the error boundary
-      } finally {
-        setLoadingAccount(false);
-      }
-    };
-
     loadAccount();
-  }, []);
+  }, [loadAccount]);
 
   if (loadingAccount) {
     return (
       <div className={styles.container}>
         <Loading text="Carregando..." size="medium" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <ErrorMessage error={error} onRetry={loadAccount} title="Erro ao carregar conta" />
       </div>
     );
   }
