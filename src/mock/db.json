@@ -1,0 +1,821 @@
+{
+  "accounts": [
+    {
+      "id": "acc-001",
+      "type": "Debit"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "txn-001",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-09-01T12:00:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-002",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-09-02T14:10:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-003",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -180,
+      "date": "2025-09-03T16:20:00.000Z",
+      "from": "Academia",
+      "to": "Mensalidade"
+    },
+    {
+      "id": "txn-004",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1000,
+      "date": "2025-09-04T18:30:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-005",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 2000,
+      "date": "2025-09-05T20:40:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-006",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -150,
+      "date": "2025-09-08T12:00:00.000Z",
+      "from": "Restaurante",
+      "to": "Pagamento"
+    },
+    {
+      "id": "txn-007",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 600,
+      "date": "2025-09-09T14:10:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-008",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-09-10T16:20:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-009",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1500,
+      "date": "2025-09-11T18:30:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-010",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -180,
+      "date": "2025-09-12T20:40:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-011",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -180,
+      "date": "2025-09-15T12:00:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-012",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-09-16T14:10:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-013",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -35,
+      "date": "2025-09-17T16:20:00.000Z",
+      "from": "Transporte",
+      "to": "Uber"
+    },
+    {
+      "id": "txn-014",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-09-18T18:30:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-015",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -180,
+      "date": "2025-09-19T20:40:00.000Z",
+      "from": "Supermercado",
+      "to": "Compras"
+    },
+    {
+      "id": "txn-016",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-09-22T12:00:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-017",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -40,
+      "date": "2025-09-23T14:10:00.000Z",
+      "from": "Transporte",
+      "to": "Uber"
+    },
+    {
+      "id": "txn-018",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 2000,
+      "date": "2025-09-24T16:20:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-019",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -45,
+      "date": "2025-09-25T18:30:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-020",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -60,
+      "date": "2025-09-26T20:40:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-021",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 2500,
+      "date": "2025-09-29T12:00:00.000Z",
+      "from": "Salário",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-022",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 3000,
+      "date": "2025-09-30T14:10:00.000Z",
+      "from": "Salário",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-023",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-10-01T16:20:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-024",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-10-02T18:30:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-025",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -55,
+      "date": "2025-10-03T20:40:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-026",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-10-06T12:00:00.000Z",
+      "from": "Combustível",
+      "to": "Posto"
+    },
+    {
+      "id": "txn-027",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-10-07T14:10:00.000Z",
+      "from": "Combustível",
+      "to": "Posto"
+    },
+    {
+      "id": "txn-028",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -40,
+      "date": "2025-10-08T16:20:00.000Z",
+      "from": "Transporte",
+      "to": "Uber"
+    },
+    {
+      "id": "txn-029",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -250,
+      "date": "2025-10-09T18:30:00.000Z",
+      "from": "Academia",
+      "to": "Mensalidade"
+    },
+    {
+      "id": "txn-030",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -100,
+      "date": "2025-10-10T20:40:00.000Z",
+      "from": "Restaurante",
+      "to": "Pagamento"
+    },
+    {
+      "id": "txn-031",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 600,
+      "date": "2025-10-13T12:00:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-032",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-10-14T14:10:00.000Z",
+      "from": "Supermercado",
+      "to": "Compras"
+    },
+    {
+      "id": "txn-033",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1000,
+      "date": "2025-10-15T16:20:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-034",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -40,
+      "date": "2025-10-16T18:30:00.000Z",
+      "from": "Transporte",
+      "to": "Uber"
+    },
+    {
+      "id": "txn-035",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -55,
+      "date": "2025-10-17T20:40:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-036",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 600,
+      "date": "2025-10-20T12:00:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-037",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 150,
+      "date": "2025-10-21T14:10:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-038",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1000,
+      "date": "2025-10-22T16:20:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-039",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -50,
+      "date": "2025-10-23T18:30:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-040",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -100,
+      "date": "2025-10-24T20:40:00.000Z",
+      "from": "Restaurante",
+      "to": "Pagamento"
+    },
+    {
+      "id": "txn-041",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -250,
+      "date": "2025-10-27T12:00:00.000Z",
+      "from": "Combustível",
+      "to": "Posto"
+    },
+    {
+      "id": "txn-042",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -220,
+      "date": "2025-10-28T14:10:00.000Z",
+      "from": "Academia",
+      "to": "Mensalidade"
+    },
+    {
+      "id": "txn-043",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -150,
+      "date": "2025-10-29T16:20:00.000Z",
+      "from": "Academia",
+      "to": "Mensalidade"
+    },
+    {
+      "id": "txn-044",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-10-30T18:30:00.000Z",
+      "from": "Combustível",
+      "to": "Posto"
+    },
+    {
+      "id": "txn-045",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -180,
+      "date": "2025-10-31T20:40:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-046",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 200,
+      "date": "2025-11-03T12:00:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-047",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-11-04T14:10:00.000Z",
+      "from": "Supermercado",
+      "to": "Compras"
+    },
+    {
+      "id": "txn-048",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1000,
+      "date": "2025-11-05T16:20:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-049",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -80,
+      "date": "2025-11-06T18:30:00.000Z",
+      "from": "Restaurante",
+      "to": "Pagamento"
+    },
+    {
+      "id": "txn-050",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1000,
+      "date": "2025-11-07T20:40:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-051",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -55,
+      "date": "2025-11-10T12:00:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-052",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1000,
+      "date": "2025-11-11T14:10:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-053",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -60,
+      "date": "2025-11-12T16:20:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-054",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 2500,
+      "date": "2025-11-13T18:30:00.000Z",
+      "from": "Salário",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-055",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -100,
+      "date": "2025-11-14T20:40:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-056",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1500,
+      "date": "2025-11-17T12:00:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-057",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1200,
+      "date": "2025-11-18T14:10:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-058",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-11-19T16:20:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-059",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -220,
+      "date": "2025-11-20T18:30:00.000Z",
+      "from": "Combustível",
+      "to": "Posto"
+    },
+    {
+      "id": "txn-060",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -250,
+      "date": "2025-11-21T20:40:00.000Z",
+      "from": "Academia",
+      "to": "Mensalidade"
+    },
+    {
+      "id": "txn-061",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -55,
+      "date": "2025-11-24T12:00:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-062",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-11-25T14:10:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-063",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-11-26T16:20:00.000Z",
+      "from": "Combustível",
+      "to": "Posto"
+    },
+    {
+      "id": "txn-064",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -200,
+      "date": "2025-11-27T18:30:00.000Z",
+      "from": "Supermercado",
+      "to": "Compras"
+    },
+    {
+      "id": "txn-065",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-11-28T20:40:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-066",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -150,
+      "date": "2025-12-01T12:00:00.000Z",
+      "from": "Restaurante",
+      "to": "Pagamento"
+    },
+    {
+      "id": "txn-067",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-12-02T14:10:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-068",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -50,
+      "date": "2025-12-03T16:20:00.000Z",
+      "from": "Streaming",
+      "to": "Assinatura mensal"
+    },
+    {
+      "id": "txn-069",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -150,
+      "date": "2025-12-04T18:30:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-070",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1500,
+      "date": "2025-12-05T20:40:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-071",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -30,
+      "date": "2025-12-08T12:00:00.000Z",
+      "from": "Transporte",
+      "to": "Uber"
+    },
+    {
+      "id": "txn-072",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1200,
+      "date": "2025-12-09T14:10:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-073",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-12-10T16:20:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-074",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-12-11T18:30:00.000Z",
+      "from": "Bônus",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-075",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-12-12T20:40:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-076",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -120,
+      "date": "2025-12-15T12:00:00.000Z",
+      "from": "Restaurante",
+      "to": "Pagamento"
+    },
+    {
+      "id": "txn-077",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -150,
+      "date": "2025-12-16T14:10:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-078",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-12-17T16:20:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-079",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -250,
+      "date": "2025-12-18T18:30:00.000Z",
+      "from": "Combustível",
+      "to": "Posto"
+    },
+    {
+      "id": "txn-080",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 600,
+      "date": "2025-12-19T20:40:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-081",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 150,
+      "date": "2025-12-22T12:00:00.000Z",
+      "from": "Reembolso",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-082",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -150,
+      "date": "2025-12-23T14:10:00.000Z",
+      "from": "Farmácia",
+      "to": "Medicamentos"
+    },
+    {
+      "id": "txn-083",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -50,
+      "date": "2025-12-24T16:20:00.000Z",
+      "from": "Transporte",
+      "to": "Uber"
+    },
+    {
+      "id": "txn-084",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 5000,
+      "date": "2025-12-25T18:30:00.000Z",
+      "from": "Salário",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-085",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 1500,
+      "date": "2025-12-26T20:40:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    },
+    {
+      "id": "txn-086",
+      "accountId": "acc-001",
+      "type": "Debit",
+      "value": -180,
+      "date": "2025-12-29T12:00:00.000Z",
+      "from": "Academia",
+      "to": "Mensalidade"
+    },
+    {
+      "id": "txn-087",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 800,
+      "date": "2025-12-30T14:10:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-088",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 500,
+      "date": "2025-12-31T16:20:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-089",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 700,
+      "date": "2026-01-01T18:30:00.000Z",
+      "from": "Investimento",
+      "to": "Dividendos"
+    },
+    {
+      "id": "txn-090",
+      "accountId": "acc-001",
+      "type": "Credit",
+      "value": 600,
+      "date": "2026-01-02T20:40:00.000Z",
+      "from": "Freelance",
+      "to": "Conta corrente"
+    }
+  ],
+  "cards": []
+}
