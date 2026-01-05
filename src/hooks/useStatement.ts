@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Balance, Transaction, TransactionFilters } from "@/types/statement";
 import { fetchBalance, fetchTransactions } from "@/api/statement.api";
 import { filterBySearch, filterByType, filterByValueRange } from "@/utils/filterUtils";
@@ -23,6 +23,8 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<AppError | null>(null);
+  const currentBalanceRequestId = useRef<symbol | null>(null);
+  const currentTransactionsRequestId = useRef<symbol | null>(null);
 
   const loadBalance = useCallback(async () => {
     if (!accountId) {
@@ -31,14 +33,21 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
       return;
     }
 
+    const requestId = Symbol();
+    currentBalanceRequestId.current = requestId;
+
     try {
       setError(null);
       const balanceData = await fetchBalance(accountId);
-      setBalance(balanceData);
+      if (currentBalanceRequestId.current === requestId) {
+        setBalance(balanceData);
+      }
     } catch (err) {
       const appError = classifyError(err);
-      setError(appError);
-      setBalance(null);
+      if (currentBalanceRequestId.current === requestId) {
+        setError(appError);
+        setBalance(null);
+      }
     }
   }, [accountId]);
 
@@ -49,19 +58,27 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
       return;
     }
 
+    const requestId = Symbol();
+    currentTransactionsRequestId.current = requestId;
+
     try {
       setLoading(true);
       setError(null);
       const transactionsData = await fetchTransactions(accountId, filters);
-      setTransactions(transactionsData);
+      if (currentTransactionsRequestId.current === requestId) {
+        setTransactions(transactionsData);
+      }
     } catch (err) {
       const appError = classifyError(err);
-      setError(appError);
-      setTransactions([]);
+      if (currentTransactionsRequestId.current === requestId) {
+        setError(appError);
+        setTransactions([]);
+      }
     } finally {
-      setLoading(false);
+      if (currentTransactionsRequestId.current === requestId) {
+        setLoading(false);
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     accountId,
     filters?.dateRange?.startDate?.getTime(),
@@ -69,6 +86,7 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
     filters?.transactionType,
     filters?.valueRange?.min,
     filters?.valueRange?.max,
+    filters?.searchQuery,
   ]);
 
   const refetch = useCallback(() => {
