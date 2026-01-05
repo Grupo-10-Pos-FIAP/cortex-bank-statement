@@ -9,7 +9,9 @@ interface CacheEntry {
 }
 
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+const MAX_CACHE_SIZE = 50; // Limite máximo de entradas no cache
 const cache = new Map<string, CacheEntry>();
+let cleanupInterval: NodeJS.Timeout | null = null;
 
 function generateCacheKey(accountId: string, startDate: Date | null, endDate: Date | null): string {
   const startStr = startDate ? startDate.toISOString() : "null";
@@ -50,6 +52,14 @@ export function setCachedTransactions(
 ): void {
   const key = generateCacheKey(accountId, startDate, endDate);
 
+  // Limpar entrada mais antiga se exceder limite
+  if (cache.size >= MAX_CACHE_SIZE) {
+    const oldestKey = Array.from(cache.entries()).sort(
+      (a, b) => a[1].timestamp - b[1].timestamp
+    )[0][0];
+    cache.delete(oldestKey);
+  }
+
   cache.set(key, {
     transactions: [...transactions],
     timestamp: Date.now(),
@@ -71,8 +81,8 @@ export function invalidateCache(accountId: string): void {
   keysToDelete.forEach((key) => cache.delete(key));
 }
 
-if (typeof window !== "undefined") {
-  setInterval(() => {
+if (typeof window !== "undefined" && !cleanupInterval) {
+  cleanupInterval = setInterval(() => {
     const keysToDelete: string[] = [];
     cache.forEach((entry, key) => {
       const now = Date.now();
@@ -82,4 +92,11 @@ if (typeof window !== "undefined") {
     });
     keysToDelete.forEach((key) => cache.delete(key));
   }, 10 * 60 * 1000);
+}
+
+export function cleanupCache(): void {
+  if (cleanupInterval) {
+    clearInterval(cleanupInterval);
+    cleanupInterval = null;
+  }
 }
