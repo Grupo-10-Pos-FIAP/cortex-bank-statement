@@ -48,32 +48,31 @@ export const initialFilters: TransactionFilters = {
   valueRange: {},
 };
 
-export type PaginationMode = "pagination" | "infinite-scroll";
-
-export interface PaginationConfig {
-  currentPage: number;
-  pageSize: number;
-  mode: PaginationMode;
+export interface InfiniteScrollConfig {
+  currentBatch: number;
+  batchSize: number;
 }
 
-export interface PaginationInfo {
-  currentPage: number;
-  pageSize: number;
-  totalPages: number;
+export interface InfiniteScrollInfo {
+  currentBatch: number;
+  batchSize: number;
+  totalBatches: number;
   totalItems: number;
   hasMore: boolean;
-  mode: PaginationMode;
+  isEmpty: boolean;
+  hasReachedEnd: boolean;
 }
 
-export const defaultPaginationConfig: PaginationConfig = {
-  currentPage: 1,
-  pageSize: 25,
-  mode: "pagination",
+export const defaultInfiniteScrollConfig: InfiniteScrollConfig = {
+  currentBatch: 1,
+  batchSize: 25,
 };
 
-export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
-
-export type PageSizeOption = (typeof PAGE_SIZE_OPTIONS)[number];
+/**
+ * Limite de itens para ativar virtualização da lista.
+ * Acima deste valor, a lista usa virtualização para melhor performance.
+ */
+export const VIRTUALIZATION_THRESHOLD = 50;
 
 export interface StatementResponse {
   message: string;
