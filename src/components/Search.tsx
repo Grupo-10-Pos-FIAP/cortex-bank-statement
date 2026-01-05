@@ -2,6 +2,8 @@ import React from "react";
 import { Input, IconButton } from "@grupo10-pos-fiap/design-system";
 import styles from "./Search.module.css";
 
+const MAX_SEARCH_LENGTH = 100;
+
 interface SearchProps {
   value: string;
   onChange: (_value: string) => void;
@@ -10,7 +12,11 @@ interface SearchProps {
 
 function Search({ value, onChange, placeholder = "Buscar transações..." }: SearchProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    const inputValue = e.target.value;
+    // Truncar se exceder limite
+    const truncatedValue =
+      inputValue.length > MAX_SEARCH_LENGTH ? inputValue.slice(0, MAX_SEARCH_LENGTH) : inputValue;
+    onChange(truncatedValue);
   };
 
   const handleClear = () => {

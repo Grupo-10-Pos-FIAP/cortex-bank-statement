@@ -4,6 +4,8 @@ import { TransactionFilters, TransactionTypeFilter, ValueRange } from "@/types/s
 import { formatDateRange, getStartOfMonth, getEndOfMonth } from "@/utils/dateUtils";
 import styles from "./Filters.module.css";
 
+const MAX_VALUE = 999999999.99;
+
 interface FiltersProps {
   filters: TransactionFilters;
   onDateRangeChange: (_start: Date | null, _end: Date | null) => void;
@@ -138,7 +140,7 @@ function Filters({
       const numValue = parseFloat(inputValue);
       if (inputValue === "") {
         onValueRangeChange({ ...filters.valueRange, min: undefined });
-      } else if (!isNaN(numValue) && numValue >= 0) {
+      } else if (!isNaN(numValue) && numValue >= 0 && numValue <= MAX_VALUE) {
         onValueRangeChange({ ...filters.valueRange, min: numValue });
       }
     },
@@ -153,7 +155,7 @@ function Filters({
       const numValue = parseFloat(inputValue);
       if (inputValue === "") {
         onValueRangeChange({ ...filters.valueRange, max: undefined });
-      } else if (!isNaN(numValue) && numValue >= 0) {
+      } else if (!isNaN(numValue) && numValue >= 0 && numValue <= MAX_VALUE) {
         onValueRangeChange({ ...filters.valueRange, max: numValue });
       }
     },
@@ -297,6 +299,7 @@ function Filters({
               onChange={handleMinChange}
               placeholder="0,00"
               min="0"
+              max={MAX_VALUE}
               step="0.01"
               variant="outlined"
               status={isInvalidRange ? "error" : "neutral"}
@@ -313,6 +316,7 @@ function Filters({
               onChange={handleMaxChange}
               placeholder="0,00"
               min="0"
+              max={MAX_VALUE}
               step="0.01"
               variant="outlined"
               status={isInvalidRange ? "error" : "neutral"}
