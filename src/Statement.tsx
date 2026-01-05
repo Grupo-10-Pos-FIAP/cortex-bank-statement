@@ -91,12 +91,13 @@ function Statement({ accountId }: StatementProps) {
       pagination.goToPage(1);
     }
   }, [
-    filters.filters.dateRange.startDate,
-    filters.filters.dateRange.endDate,
+    filters.filters.dateRange.startDate?.getTime(),
+    filters.filters.dateRange.endDate?.getTime(),
     filters.filters.transactionType,
-    filters.filters.valueRange,
+    filters.filters.valueRange.min,
+    filters.filters.valueRange.max,
     search.debouncedQuery,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    pagination.currentPage,
   ]);
 
   if (!accountId) {
@@ -138,6 +139,15 @@ function Statement({ accountId }: StatementProps) {
         </Card.Section>
 
         <Card.Section className={styles.content}>
+          <div aria-live="polite" aria-atomic="true" className={styles.srOnly}>
+            {statement.loading &&
+              statement.filteredTransactions.length === 0 &&
+              "Carregando transações"}
+            {statement.error && `Erro: ${statement.error.message}`}
+            {!statement.loading &&
+              !statement.error &&
+              `${paginatedTransactions.length} transações exibidas`}
+          </div>
           {statement.loading && statement.filteredTransactions.length === 0 ? (
             <Skeleton type="transaction-list" itemsCount={5} />
           ) : (
