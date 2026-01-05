@@ -10,9 +10,16 @@ function getAuthToken(): string | null {
   return null;
 }
 
-function createTimeoutController(timeout: number): AbortController {
-  const controller = new AbortController();
-  setTimeout(() => controller.abort(), timeout);
+interface TimeoutAbortController extends AbortController {
+  timeoutId?: NodeJS.Timeout;
+}
+
+function createTimeoutController(timeout: number): TimeoutAbortController {
+  const controller = new AbortController() as TimeoutAbortController;
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, timeout);
+  controller.timeoutId = timeoutId;
   return controller;
 }
 
@@ -38,7 +45,13 @@ export async function fetchApi(
     let signal = timeoutController.signal;
     if (fetchOptions.signal) {
       const combinedController = new AbortController();
-      const abort = () => combinedController.abort();
+      const abort = () => {
+        // Limpar timeout se abortar manualmente
+        if (timeoutController.timeoutId) {
+          clearTimeout(timeoutController.timeoutId);
+        }
+        combinedController.abort();
+      };
       timeoutController.signal.addEventListener("abort", abort);
       fetchOptions.signal.addEventListener("abort", abort);
       signal = combinedController.signal;
