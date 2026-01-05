@@ -1,0 +1,139 @@
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-default);
+}
+
+.filterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.filterTitle {
+  font-size: var(--font-subtitle);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-content-default);
+}
+
+.activeFiltersBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-radius: 12px;
+  font-size: var(--font-caption);
+  font-weight: var(--font-weight-semibold);
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.filterLabel {
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-content-default);
+}
+
+.radioGroup {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.rangeInputs {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.rangeInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+  min-width: 150px;
+}
+
+.filterActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.errorMessage {
+  font-size: var(--font-caption);
+  color: var(--color-error);
+  margin-top: var(--spacing-xs);
+}
+
+.datePickerContainer {
+  position: relative;
+}
+
+.datePicker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.presets {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.dateInputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+@media (max-width: 768px) {
+  .filters {
+    padding: var(--spacing-md);
+  }
+
+  .rangeInputs {
+    flex-direction: column;
+  }
+
+  .rangeInputWrapper {
+    min-width: 100%;
+  }
+
+  .datePicker {
+    position: fixed;
+    left: var(--spacing-md);
+    right: var(--spacing-md);
+    top: auto;
+    bottom: var(--spacing-md);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}

@@ -1,0 +1,16 @@
+.search {
+  width: 100%;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.clearButtonWrapper {
+  position: absolute;
+  right: var(--spacing-sm);
+  z-index: 1;
+}

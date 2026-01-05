@@ -1,0 +1,23 @@
+.statement {
+  width: 100%;
+}
+
+.card {
+  margin-top: var(--spacing-lg);
+}
+
+.filtersSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.searchWrapper {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
