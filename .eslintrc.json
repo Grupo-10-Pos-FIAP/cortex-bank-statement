@@ -1,0 +1,146 @@
+{
+  "extends": [
+    "ts-react-important-stuff",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["react", "react-hooks", "@typescript-eslint"],
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true,
+    "jest": true
+  },
+  "rules": {
+    // Regra #11: Manter código livre de erros e avisos
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+
+    // Regra #2: Evitar código duplicado - detectar imports duplicados
+    "no-duplicate-imports": "error",
+
+    // Regra #3: KISS - manter código simples
+    "complexity": ["warn", 15],
+    "max-depth": ["warn", 4],
+    "max-lines-per-function": ["warn", { "max": 100, "skipBlankLines": true }],
+
+    // React - Regra #7: Memorização e performance
+    "react/jsx-key": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react/no-array-index-key": "warn",
+    "react/no-unused-prop-types": "warn",
+
+    // TypeScript - Regra #11: Tipos corretos
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+
+    // Regra #1: Arquitetura - evitar imports entre camadas incorretas
+    "no-restricted-imports": [
+      "warn",
+      {
+        "patterns": [
+          {
+            "group": ["../domain/**", "../../domain/**"],
+            "message": "Domain layer não deve importar de Presentation ou Application"
+          }
+        ]
+      }
+    ],
+
+    // Regra #8: Documentação - exigir JSDoc em funções complexas
+    "require-jsdoc": "off",
+
+    // Boas práticas gerais
+    "prefer-const": "error",
+    "no-var": "error",
+    "prefer-arrow-callback": "warn",
+    "prefer-template": "warn",
+    "object-shorthand": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.js", "**/*.jsx"],
+      "parser": "@babel/eslint-parser",
+      "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "jsx": true
+        },
+        "requireConfigFile": false,
+        "babelOptions": {
+          "presets": ["@babel/preset-react", "@babel/preset-typescript"]
+        }
+      }
+    },
+    {
+      "files": ["src/mock/**/*.js"],
+      "parser": "espree",
+      "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module"
+      },
+      "env": {
+        "node": true
+      },
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
+        "no-console": "off"
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": ["src/domain/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react",
+                "message": "Domain layer não deve importar React"
+              },
+              {
+                "name": "react-redux",
+                "message": "Domain layer não deve importar Redux"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
