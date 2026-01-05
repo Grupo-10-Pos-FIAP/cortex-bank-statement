@@ -3,7 +3,8 @@
   "scripts": {
     "start": "webpack serve --port 3004",
     "start:standalone": "webpack serve --port 3004 --env standalone",
-    "start:mock": "concurrently \"npm run mock:server\" \"npm run start:standalone\"",
+    "clean:ports": "node src/scripts/clean-ports.js",
+    "start:mock": "npm run clean:ports && concurrently \"npm run mock:server\" \"npm run start:standalone\"",
     "start:backend": "cross-env API_BASE_URL=http://localhost:8080 npm run start:standalone",
     "mock:server": "node src/mock/test-server.js",
     "mock:generate": "node src/mock/generate-transactions.js",
