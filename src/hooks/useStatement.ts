@@ -16,6 +16,7 @@ interface UseStatementReturn {
   // Transações filtradas client-side (busca, tipo, valor)
   filteredTransactions: Transaction[];
   loading: boolean;
+  loadingMore: boolean;
   error: AppError | null;
   pagination: {
     page: number;
@@ -113,6 +114,8 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
 
     if (dateRangeChanged) {
       setAllTransactions([]);
+      setLoadingMore(false);
+      isLoadingMoreRef.current = false;
       setPagination({
         page: 1,
         pageSize: DEFAULT_PAGE_SIZE,
@@ -170,12 +173,29 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
             setAllTransactions(response.data);
           }
 
+          // Calcular hasMore de forma mais robusta
+          // Se estamos na última página, não há mais dados
+          const isLastPage = response.pagination.page >= response.pagination.totalPages;
+
+          // Se a página retornou menos transações que o pageSize, é a última página
+          const isLastPageByData = response.data.length < response.pagination.pageSize;
+
+          // Não há mais dados se:
+          // 1. Estamos na última página OU
+          // 2. A página retornou menos dados que o pageSize (última página) OU
+          // 3. A resposta indica que não há mais (hasMore: false)
+          const hasMoreData =
+            !isLastPage &&
+            !isLastPageByData &&
+            response.pagination.hasMore &&
+            response.data.length > 0;
+
           setPagination({
             page: response.pagination.page,
             pageSize: response.pagination.pageSize,
             total: response.pagination.total,
             totalPages: response.pagination.totalPages,
-            hasMore: response.pagination.hasMore,
+            hasMore: hasMoreData,
           });
         }
       } catch (err) {
@@ -200,6 +220,12 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
       return;
     }
 
+    // Verificação adicional: se já estamos na última página, não carregar mais
+    if (pagination.page >= pagination.totalPages) {
+      setPagination((prev) => ({ ...prev, hasMore: false }));
+      return;
+    }
+
     isLoadingMoreRef.current = true;
     setLoadingMore(true);
     const nextPage = pagination.page + 1;
@@ -210,7 +236,14 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
       isLoadingMoreRef.current = false;
       setLoadingMore(false);
     }
-  }, [accountId, pagination.hasMore, pagination.page, loadTransactions, loadingMore]);
+  }, [
+    accountId,
+    pagination.hasMore,
+    pagination.page,
+    pagination.totalPages,
+    loadTransactions,
+    loadingMore,
+  ]);
 
   const refetch = useCallback(() => {
     loadBalance();
@@ -293,6 +326,7 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
     allTransactions,
     filteredTransactions,
     loading,
+    loadingMore,
     error,
     pagination,
     loadMore,

@@ -5,6 +5,7 @@ import {
   TransactionTypeFilter,
   ValueRange,
 } from "@/types/statement";
+import { getLast30DaysStart, getLast30DaysEnd } from "@/utils/dateUtils";
 
 interface UseStatementFiltersReturn {
   filters: TransactionFilters;
@@ -16,17 +17,40 @@ interface UseStatementFiltersReturn {
   activeFiltersCount: number;
 }
 
+// Inicializar filtros com período padrão (últimos 30 dias)
+const getInitialFilters = (): TransactionFilters => {
+  return {
+    ...initialFilters,
+    dateRange: {
+      startDate: getLast30DaysStart(),
+      endDate: getLast30DaysEnd(),
+    },
+  };
+};
+
 export function useStatementFilters(): UseStatementFiltersReturn {
-  const [filters, setFilters] = useState<TransactionFilters>(initialFilters);
+  const [filters, setFilters] = useState<TransactionFilters>(getInitialFilters());
 
   const updateDateRange = useCallback((_start: Date | null, _end: Date | null) => {
-    setFilters((prev) => ({
-      ...prev,
-      dateRange: {
-        startDate: _start,
-        endDate: _end,
-      },
-    }));
+    setFilters((prev) => {
+      // Normaliza as datas se startDate > endDate (inverte os valores)
+      let startDate = _start;
+      let endDate = _end;
+
+      if (startDate && endDate && startDate > endDate) {
+        // Inverte as datas se a inicial for maior que a final
+        startDate = _end;
+        endDate = _start;
+      }
+
+      return {
+        ...prev,
+        dateRange: {
+          startDate,
+          endDate,
+        },
+      };
+    });
   }, []);
 
   const updateSearchQuery = useCallback((_query: string) => {
@@ -51,7 +75,7 @@ export function useStatementFilters(): UseStatementFiltersReturn {
   }, []);
 
   const resetFilters = useCallback(() => {
-    setFilters(initialFilters);
+    setFilters(getInitialFilters());
   }, []);
 
   const activeFiltersCount = useMemo(() => {
