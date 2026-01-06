@@ -7,11 +7,8 @@ import * as statementApi from "@/api/statement.api";
 // Mock the API
 vi.mock("@/api/statement.api", () => ({
   fetchAccount: vi.fn().mockResolvedValue({
-    message: "Success",
-    result: {
-      account: [{ id: "test-account-id", type: "checking" }],
-      transactions: [],
-    },
+    id: "test-account-id",
+    type: "checking",
   }),
 }));
 
