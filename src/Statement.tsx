@@ -2,27 +2,22 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card } from "@grupo10-pos-fiap/design-system";
 import { useStatement } from "@/hooks/useStatement";
 import { useStatementFilters } from "@/hooks/useStatementFilters";
-import { usePagination } from "@/hooks/usePagination";
 import { useSearch } from "@/hooks/useSearch";
 import { getLast30DaysStart, getLast30DaysEnd } from "@/utils/dateUtils";
 import StatementHeader from "@/components/StatementHeader";
 import Search from "@/components/Search";
 import Filters from "@/components/Filters";
 import TransactionList from "@/components/TransactionList";
-import PaginationControls from "@/components/PaginationControls";
-import Skeleton from "@/components/Skeleton";
 import styles from "./Statement.module.css";
 
 interface StatementProps {
   accountId: string | null;
 }
 
-function Statement({ accountId }: StatementProps) {
-  const [isBalanceVisible, setIsBalanceVisible] = useState<boolean>(true);
-
-  const filters = useStatementFilters();
-  const search = useSearch();
-
+function useStatementEffects(
+  filters: ReturnType<typeof useStatementFilters>,
+  search: ReturnType<typeof useSearch>
+) {
   useEffect(() => {
     filters.updateSearchQuery(search.debouncedQuery);
   }, [search.debouncedQuery, filters.updateSearchQuery]);
@@ -31,22 +26,25 @@ function Statement({ accountId }: StatementProps) {
     if (!filters.filters.dateRange.startDate && !filters.filters.dateRange.endDate) {
       filters.updateDateRange(getLast30DaysStart(), getLast30DaysEnd());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    filters.filters.dateRange.startDate,
+    filters.filters.dateRange.endDate,
+    filters.updateDateRange,
+  ]);
+}
+
+function Statement({ accountId }: StatementProps) {
+  const [isBalanceVisible, setIsBalanceVisible] = useState<boolean>(true);
+
+  const filters = useStatementFilters();
+  const search = useSearch();
 
   const memoizedFilters = useMemo(
     () => ({
       ...filters.filters,
       searchQuery: search.debouncedQuery,
     }),
-    [
-      filters.filters.dateRange.startDate,
-      filters.filters.dateRange.endDate,
-      filters.filters.transactionType,
-      filters.filters.valueRange.min,
-      filters.filters.valueRange.max,
-      search.debouncedQuery,
-    ]
+    [filters.filters, search.debouncedQuery]
   );
 
   const statement = useStatement({
@@ -54,51 +52,46 @@ function Statement({ accountId }: StatementProps) {
     filters: memoizedFilters,
   });
 
-  const pagination = usePagination(statement.filteredTransactions.length);
+  useStatementEffects(filters, search);
 
-  const paginatedTransactions = useMemo(() => {
-    const startIndex = (pagination.currentPage - 1) * pagination.pageSize;
-    const endIndex = startIndex + pagination.pageSize;
+  // Para scroll infinito visual, podemos manter um slice progressivo
+  // Mas agora baseado em filteredTransactions já carregadas do servidor
+  const loadedTransactions = useMemo(() => {
+    // Mostrar todas as transações filtradas já carregadas
+    // O scroll infinito agora é gerenciado pelo loadMore() do hook
+    return statement.filteredTransactions;
+  }, [statement.filteredTransactions]);
 
-    if (pagination.mode === "infinite-scroll") {
-      return statement.filteredTransactions.slice(0, endIndex);
+  // Verifica se todos os itens foram carregados/exibidos
+  // Considera tanto o fim do servidor quanto se há filtros ativos sem resultados suficientes
+  const hasReachedEnd = useMemo(() => {
+    // Se não há mais páginas no servidor, chegamos ao fim
+    if (!statement.pagination.hasMore) {
+      return !statement.loading;
     }
 
-    return statement.filteredTransactions.slice(startIndex, endIndex);
-  }, [
-    statement.filteredTransactions,
-    pagination.currentPage,
-    pagination.pageSize,
-    pagination.mode,
-  ]);
+    // Se há filtros client-side ativos e não há resultados visíveis,
+    // mas ainda há mais páginas no servidor, continuamos carregando
+    // O scroll infinito deve continuar funcionando para encontrar mais resultados
+    return false;
+  }, [statement.loading, statement.pagination.hasMore]);
 
   const handleToggleBalanceVisibility = useCallback(() => {
     setIsBalanceVisible((prev) => !prev);
   }, []);
 
   const handleLoadMore = useCallback(() => {
-    if (pagination.mode === "infinite-scroll" && pagination.hasMore) {
-      pagination.loadMore();
+    // Sempre tentar carregar mais se houver mais páginas disponíveis
+    // Mesmo com filtros client-side ativos, precisamos carregar mais transações
+    // para que os filtros possam encontrar resultados correspondentes
+    if (statement.pagination.hasMore && !statement.loading) {
+      statement.loadMore();
     }
-  }, [pagination]);
+  }, [statement.pagination.hasMore, statement.loading, statement.loadMore]);
 
   const handleRetry = useCallback(() => {
     statement.refetch();
   }, [statement]);
-
-  useEffect(() => {
-    if (pagination.currentPage !== 1) {
-      pagination.goToPage(1);
-    }
-  }, [
-    filters.filters.dateRange.startDate?.getTime(),
-    filters.filters.dateRange.endDate?.getTime(),
-    filters.filters.transactionType,
-    filters.filters.valueRange.min,
-    filters.filters.valueRange.max,
-    search.debouncedQuery,
-    pagination.currentPage,
-  ]);
 
   if (!accountId) {
     return (
@@ -146,28 +139,21 @@ function Statement({ accountId }: StatementProps) {
             {statement.error && `Erro: ${statement.error.message}`}
             {!statement.loading &&
               !statement.error &&
-              `${paginatedTransactions.length} transações exibidas`}
+              `${loadedTransactions.length} transações exibidas`}
           </div>
-          {statement.loading && statement.filteredTransactions.length === 0 ? (
-            <Skeleton type="transaction-list" itemsCount={5} />
-          ) : (
-            <>
-              <TransactionList
-                transactions={paginatedTransactions}
-                loading={statement.loading}
-                error={statement.error}
-                mode={pagination.mode}
-                onLoadMore={handleLoadMore}
-                onRetry={handleRetry}
-              />
-              <PaginationControls
-                paginationInfo={pagination.paginationInfo}
-                onPageChange={pagination.goToPage}
-                onPageSizeChange={pagination.setPageSize}
-                onModeChange={pagination.setMode}
-              />
-            </>
-          )}
+          <TransactionList
+            transactions={loadedTransactions}
+            loading={statement.loading}
+            error={statement.error}
+            onLoadMore={handleLoadMore}
+            onRetry={handleRetry}
+            isEmpty={
+              statement.filteredTransactions.length === 0 &&
+              !statement.loading &&
+              !statement.pagination.hasMore
+            }
+            hasReachedEnd={hasReachedEnd}
+          />
         </Card.Section>
       </Card>
     </div>

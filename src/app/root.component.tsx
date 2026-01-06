@@ -19,10 +19,10 @@ export default function Root(_props: RootProps) {
     try {
       setError(null);
       setLoadingAccount(true);
-      const accountData = await fetchAccount();
+      const accountInfo = await fetchAccount();
 
-      if (accountData.result.account && accountData.result.account.length > 0) {
-        setAccountId(accountData.result.account[0].id);
+      if (accountInfo && accountInfo.id) {
+        setAccountId(accountInfo.id);
       } else {
         setAccountId(null);
       }
