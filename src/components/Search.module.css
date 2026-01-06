@@ -1,5 +1,6 @@
 .search {
   width: 100%;
+  margin-bottom: var(--spacing-xs);
 }
 
 .inputWrapper {
@@ -11,6 +12,9 @@
 
 .clearButtonWrapper {
   position: absolute;
-  right: var(--spacing-sm);
+  right: var(--spacing-md);
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

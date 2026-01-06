@@ -23,7 +23,7 @@ function StatementHeader({
   return (
     <Card variant="elevated" color="base" className={styles.card}>
       <div className={styles.header}>
-        <Text variant="subtitle" weight="semibold">
+        <Text variant="subtitle" weight="semibold" className={styles.headerTitle}>
           Saldo
         </Text>
         <IconButton

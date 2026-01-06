@@ -1,22 +1,31 @@
 .card {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.headerTitle {
+  color: var(--color-content-secondary);
+  font-size: var(--font-subtitle);
 }
 
 .balance {
-  font-size: var(--font-h5);
+  font-size: var(--font-h2);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
 .yield {
   font-size: var(--font-small);
   color: var(--color-success);
+  margin-top: var(--spacing-xs);
 }
