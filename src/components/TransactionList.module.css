@@ -1,7 +1,7 @@
 .transactionList {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 }
 
 .transactionItem {
@@ -12,11 +12,18 @@
   background: var(--color-white);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition-default);
+  border: 1px solid transparent;
 }
 
-.transactionItem:hover {
-  box-shadow: var(--shadow-lg);
+.transactionItem:hover,
+.transactionItem:focus,
+.transactionItem:focus-visible,
+.transactionItem:active {
+  box-shadow: var(--shadow-sm);
+  transform: none;
+  border-color: transparent;
+  outline: none;
+  cursor: default;
 }
 
 .transactionIcon {
@@ -24,27 +31,36 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  background: var(--color-gray200);
-  border-radius: var(--radius-full);
+  width: 48px;
+  height: 48px;
 }
 
 .transactionDetails {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
 .transactionType {
   font-size: var(--font-body);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-base);
-  margin-bottom: var(--spacing-xs);
+  color: var(--color-content-default);
+  line-height: 1.4;
 }
 
 .personName {
   font-size: var(--font-small);
-  color: var(--color-gray600);
+  color: var(--color-content-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  line-height: 1.4;
+}
+
+.personName :global(.icon) {
+  flex-shrink: 0;
 }
 
 .transactionRight {
@@ -53,16 +69,27 @@
   align-items: flex-end;
   gap: var(--spacing-xs);
   flex-shrink: 0;
+  text-align: right;
 }
 
 .transactionValue {
-  font-size: var(--font-body);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-subtitle);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  letter-spacing: -0.3px;
 }
 
 .transactionDate {
   font-size: var(--font-caption);
-  color: var(--color-gray500);
+  color: var(--color-content-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  line-height: 1.4;
+}
+
+.transactionDate :global(.icon) {
+  flex-shrink: 0;
 }
 
 .loadingContainer,
@@ -71,16 +98,35 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-2xl);
-  background: var(--color-white);
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  background: var(--color-bg-secondary);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  border: 1px dashed var(--color-border-default);
+  min-height: 200px;
+}
+
+.emptyContainer {
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .infiniteScrollTrigger {
-  height: 60px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+}
+
+.feedbackMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  min-height: 200px;
+  color: var(--color-base);
+  font-size: var(--font-small);
+  text-align: center;
+  line-height: 1.5;
 }
