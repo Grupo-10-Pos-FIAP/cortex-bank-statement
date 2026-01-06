@@ -3,7 +3,6 @@ import { Card } from "@grupo10-pos-fiap/design-system";
 import { useStatement } from "@/hooks/useStatement";
 import { useStatementFilters } from "@/hooks/useStatementFilters";
 import { useSearch } from "@/hooks/useSearch";
-import { getLast30DaysStart, getLast30DaysEnd } from "@/utils/dateUtils";
 import StatementHeader from "@/components/StatementHeader";
 import Search from "@/components/Search";
 import Filters from "@/components/Filters";
@@ -20,17 +19,7 @@ function useStatementEffects(
 ) {
   useEffect(() => {
     filters.updateSearchQuery(search.debouncedQuery);
-  }, [search.debouncedQuery, filters.updateSearchQuery]);
-
-  useEffect(() => {
-    if (!filters.filters.dateRange.startDate && !filters.filters.dateRange.endDate) {
-      filters.updateDateRange(getLast30DaysStart(), getLast30DaysEnd());
-    }
-  }, [
-    filters.filters.dateRange.startDate,
-    filters.filters.dateRange.endDate,
-    filters.updateDateRange,
-  ]);
+  }, [search.debouncedQuery, filters]);
 }
 
 function Statement({ accountId }: StatementProps) {
@@ -54,36 +43,52 @@ function Statement({ accountId }: StatementProps) {
 
   useStatementEffects(filters, search);
 
-  // Para scroll infinito visual, podemos manter um slice progressivo
-  // Mas agora baseado em filteredTransactions já carregadas do servidor
-  const loadedTransactions = useMemo(() => {
-    // Mostrar todas as transações filtradas já carregadas
-    // O scroll infinito agora é gerenciado pelo loadMore() do hook
-    return statement.filteredTransactions;
-  }, [statement.filteredTransactions]);
-
-  // Verifica se todos os itens foram carregados/exibidos
-  // Considera tanto o fim do servidor quanto se há filtros ativos sem resultados suficientes
   const hasReachedEnd = useMemo(() => {
-    // Se não há mais páginas no servidor, chegamos ao fim
-    if (!statement.pagination.hasMore) {
-      return !statement.loading;
+    if (statement.loading || statement.loadingMore) {
+      return false;
     }
 
-    // Se há filtros client-side ativos e não há resultados visíveis,
-    // mas ainda há mais páginas no servidor, continuamos carregando
-    // O scroll infinito deve continuar funcionando para encontrar mais resultados
+    if (statement.filteredTransactions.length === 0) {
+      return false;
+    }
+
+    if (!statement.pagination.hasMore) {
+      return true;
+    }
+
+    const isLastPage = statement.pagination.page >= statement.pagination.totalPages;
+    if (isLastPage) {
+      return true;
+    }
+
+    if (
+      statement.pagination.total > 0 &&
+      statement.allTransactions.length >= statement.pagination.total
+    ) {
+      return true;
+    }
+
+    if (statement.pagination.totalPages === 0 && statement.filteredTransactions.length > 0) {
+      return true;
+    }
+
     return false;
-  }, [statement.loading, statement.pagination.hasMore]);
+  }, [
+    statement.loading,
+    statement.loadingMore,
+    statement.pagination.hasMore,
+    statement.pagination.page,
+    statement.pagination.totalPages,
+    statement.pagination.total,
+    statement.filteredTransactions.length,
+    statement.allTransactions.length,
+  ]);
 
   const handleToggleBalanceVisibility = useCallback(() => {
     setIsBalanceVisible((prev) => !prev);
   }, []);
 
   const handleLoadMore = useCallback(() => {
-    // Sempre tentar carregar mais se houver mais páginas disponíveis
-    // Mesmo com filtros client-side ativos, precisamos carregar mais transações
-    // para que os filtros possam encontrar resultados correspondentes
     if (statement.pagination.hasMore && !statement.loading) {
       statement.loadMore();
     }
@@ -139,10 +144,10 @@ function Statement({ accountId }: StatementProps) {
             {statement.error && `Erro: ${statement.error.message}`}
             {!statement.loading &&
               !statement.error &&
-              `${loadedTransactions.length} transações exibidas`}
+              `${statement.filteredTransactions.length} transações exibidas`}
           </div>
           <TransactionList
-            transactions={loadedTransactions}
+            transactions={statement.filteredTransactions}
             loading={statement.loading}
             error={statement.error}
             onLoadMore={handleLoadMore}
