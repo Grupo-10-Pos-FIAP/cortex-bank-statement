@@ -103,11 +103,15 @@ export async function fetchTransactions(
       totalPages: Math.ceil(sortedTransactions.length / pageSize),
     };
 
+    // Calcular hasMore: verifica se há mais páginas E se a página atual retornou dados
+    // Se a página atual está vazia ou é a última página, não há mais dados
+    const hasMore = pagination.page < pagination.totalPages && sortedTransactions.length > 0;
+
     const result: PaginatedResponse<Transaction> = {
       data: sortedTransactions,
       pagination: {
         ...pagination,
-        hasMore: pagination.page < pagination.totalPages,
+        hasMore,
       },
     };
 
