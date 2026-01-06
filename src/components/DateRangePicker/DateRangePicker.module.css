@@ -1,0 +1,539 @@
+.dateRangePicker {
+  position: relative;
+  width: 100%;
+}
+
+.periodInputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.periodInput {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  font-size: var(--font-body);
+  font-family: var(--font-family);
+  color: var(--color-content-default);
+  background-color: var(--color-bg-secondary);
+  border: 1.5px solid var(--color-gray200);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+  transition: all var(--transition-default) cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.periodInput:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.periodInput:focus {
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-focus-primary), 0 2px 8px rgba(28, 110, 164, 0.15);
+  transform: translateY(-1px);
+}
+
+.periodText {
+  flex: 1;
+  text-align: left;
+}
+
+.periodDropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-sm));
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-xs);
+  animation: slideDown 0.2s ease-out;
+}
+
+.presetOptions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.presetOption {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-default);
+}
+
+.presetOption:hover {
+  background-color: var(--color-bg-hovered);
+}
+
+.presetOption input[type="checkbox"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 2px solid var(--color-gray300);
+  background-color: var(--color-white);
+  transition: all var(--transition-default);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.presetOption input[type="checkbox"]:hover {
+  border-color: var(--color-primary);
+}
+
+.presetOption input[type="checkbox"]:checked {
+  background-color: var(--color-white);
+  border-color: var(--color-primary);
+  border-width: 2px;
+}
+
+.presetOption input[type="checkbox"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+}
+
+.presetOption span {
+  font-size: var(--font-small);
+  color: var(--color-content-default);
+  user-select: none;
+}
+
+.customDateInputs {
+  display: flex;
+  gap: var(--spacing-md);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inputsContainer {
+  display: flex;
+  gap: var(--spacing-md);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inputWrapper {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  box-sizing: border-box;
+}
+
+.inputLabel {
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-content-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.dateInput {
+  width: 100%;
+  padding: var(--spacing-md);
+  font-size: var(--font-body);
+  font-family: var(--font-family);
+  color: var(--color-content-default);
+  background-color: var(--color-bg-secondary);
+  border: 1.5px solid var(--color-gray200);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+  transition: all var(--transition-default) cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  padding-right: 48px;
+}
+
+.dateInput::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.dateInput::-webkit-inner-spin-button,
+.dateInput::-webkit-clear-button {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.dateInput:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.dateInput:focus {
+  border-color: var(--color-primary);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-focus-primary), 0 2px 8px rgba(28, 110, 164, 0.15);
+  transform: translateY(-1px);
+}
+
+.calendarIcon {
+  position: absolute;
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  transition: all var(--transition-default) ease;
+  border-radius: var(--radius-sm);
+}
+
+.calendarIcon:hover {
+  background-color: var(--color-soft);
+  transform: scale(1.1);
+}
+
+.calendarIcon:active {
+  transform: scale(0.95);
+}
+
+.calendarContainer {
+  position: absolute;
+  top: calc(100% + var(--spacing-sm));
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-xs);
+  animation: slideDown 0.2s ease-out;
+}
+
+.calendarContainerClosing {
+  animation: slideUp 0.2s ease-in;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.navButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-default);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-default) ease;
+}
+
+.navButton:hover {
+  background-color: var(--color-bg-hovered);
+  color: var(--color-primary);
+}
+
+.navButton:active {
+  transform: scale(0.95);
+}
+
+.monthYearSelector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.monthYearButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-default) ease;
+}
+
+.monthYearButton:hover {
+  background-color: var(--color-bg-hovered);
+}
+
+.monthYear {
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-content-default);
+}
+
+.dropdownIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-content-secondary);
+  transition: all var(--transition-default) ease;
+}
+
+.dropdownIconOpen {
+  transform: rotate(180deg);
+}
+
+.monthYearSelectorDropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-xs));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-md);
+  min-width: 280px;
+  animation: slideDown 0.2s ease-out;
+}
+
+.yearsContainer {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.yearButton {
+  flex: 1;
+  padding: var(--spacing-sm);
+  background: none;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-content-default);
+  transition: all var(--transition-default) ease;
+}
+
+.yearButton:hover {
+  background-color: var(--color-bg-hovered);
+  border-color: var(--color-primary);
+}
+
+.yearButtonActive {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.monthsContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xs);
+}
+
+.monthButton {
+  padding: var(--spacing-sm);
+  background: none;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-content-default);
+  transition: all var(--transition-default) ease;
+  text-align: center;
+}
+
+.monthButton:hover:not(.monthButtonDisabled) {
+  background-color: var(--color-bg-hovered);
+  border-color: var(--color-primary);
+}
+
+.monthButtonActive {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.monthButtonDisabled {
+  color: var(--color-content-disabled);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.monthButtonDisabled:hover {
+  background: none;
+  border-color: var(--color-border-default);
+}
+
+.calendarGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+}
+
+.weekday {
+  text-align: center;
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-content-secondary);
+  padding: var(--spacing-xs);
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+}
+
+.dayEmpty {
+  aspect-ratio: 1;
+}
+
+.day {
+  aspect-ratio: 1;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  font-size: var(--font-body);
+  color: var(--color-content-default);
+  transition: all var(--transition-default) ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-weight: var(--font-weight-regular);
+}
+
+.day:hover:not(.dayDisabled) {
+  background-color: var(--color-bg-hovered);
+  transform: scale(1.1);
+}
+
+.daySelected {
+  background-color: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  box-shadow: 0 2px 4px rgba(28, 110, 164, 0.3);
+}
+
+.dayInRange:not(.daySelected) {
+  background-color: var(--color-soft);
+  color: var(--color-primary);
+}
+
+.dayToday {
+  font-weight: var(--font-weight-semibold);
+}
+
+.dayToday:not(.daySelected)::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+}
+
+.dayDisabled {
+  color: var(--color-content-disabled);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.dayDisabled:hover {
+  background: none;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .inputsContainer {
+    flex-direction: column;
+  }
+
+  .calendarContainer {
+    position: fixed;
+    left: var(--spacing-md);
+    right: var(--spacing-md);
+    top: auto;
+    bottom: var(--spacing-md);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
