@@ -21,6 +21,9 @@ export interface Account {
   type: string;
 }
 
+// Tipo simplificado para informações da conta
+export type AccountInfo = Account;
+
 export type TransactionTypeFilter = "all" | "Credit" | "Debit";
 
 export interface ValueRange {
@@ -36,6 +39,11 @@ export interface TransactionFilters {
   searchQuery: string;
   transactionType: TransactionTypeFilter;
   valueRange: ValueRange;
+  // Paginação server-side (usado internamente pelo hook)
+  pagination?: {
+    page: number;
+    pageSize: number;
+  };
 }
 
 export const initialFilters: TransactionFilters = {
@@ -68,16 +76,18 @@ export const defaultInfiniteScrollConfig: InfiniteScrollConfig = {
   batchSize: 25,
 };
 
-/**
- * Limite de itens para ativar virtualização da lista.
- * Acima deste valor, a lista usa virtualização para melhor performance.
- */
 export const VIRTUALIZATION_THRESHOLD = 50;
 
 export interface StatementResponse {
   message: string;
   result: {
     transactions: Transaction[];
+    pagination?: {
+      page: number;
+      pageSize: number;
+      total: number;
+      totalPages: number;
+    };
   };
 }
 
@@ -92,11 +102,21 @@ export interface BalanceResponse {
   };
 }
 
+// Resposta paginada genérica
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}
+
 export interface AccountResponse {
   message: string;
   result: {
     account: Account[];
-    transactions: Transaction[];
-    cards?: unknown[];
   };
 }

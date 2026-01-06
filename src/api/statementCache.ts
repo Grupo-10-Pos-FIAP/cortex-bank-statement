@@ -1,22 +1,31 @@
-import { Transaction } from "@/types/statement";
+import { Transaction, PaginatedResponse } from "@/types/statement";
 
 interface CacheEntry {
-  transactions: Transaction[];
+  data: Transaction[];
   timestamp: number;
   accountId: string;
   startDate: string | null;
   endDate: string | null;
+  page: number;
+  pageSize: number;
+  total?: number; // Total de registros no servidor
 }
 
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
-const MAX_CACHE_SIZE = 50; // Limite máximo de entradas no cache
+const MAX_CACHE_SIZE = 100; // Aumentado para suportar múltiplas páginas
 const cache = new Map<string, CacheEntry>();
 let cleanupInterval: NodeJS.Timeout | null = null;
 
-function generateCacheKey(accountId: string, startDate: Date | null, endDate: Date | null): string {
+function generateCacheKey(
+  accountId: string,
+  startDate: Date | null,
+  endDate: Date | null,
+  page: number,
+  pageSize: number
+): string {
   const startStr = startDate ? startDate.toISOString() : "null";
   const endStr = endDate ? endDate.toISOString() : "null";
-  return `${accountId}:${startStr}:${endStr}`;
+  return `${accountId}:${startStr}:${endStr}:${page}:${pageSize}`;
 }
 
 function isCacheValid(entry: CacheEntry): boolean {
@@ -27,30 +36,46 @@ function isCacheValid(entry: CacheEntry): boolean {
 export function getCachedTransactions(
   accountId: string,
   startDate: Date | null = null,
-  endDate: Date | null = null
-): Transaction[] | null {
-  const key = generateCacheKey(accountId, startDate, endDate);
+  endDate: Date | null = null,
+  page = 1,
+  pageSize = 25
+): PaginatedResponse<Transaction> | null {
+  const key = generateCacheKey(accountId, startDate, endDate, page, pageSize);
   const entry = cache.get(key);
 
-  if (!entry) {
+  if (!entry || !isCacheValid(entry)) {
+    if (entry && !isCacheValid(entry)) {
+      cache.delete(key);
+    }
     return null;
   }
 
-  if (!isCacheValid(entry)) {
-    cache.delete(key);
-    return null;
-  }
+  const totalPages = entry.total
+    ? Math.ceil(entry.total / pageSize)
+    : Math.ceil(entry.data.length / pageSize);
 
-  return entry.transactions;
+  return {
+    data: entry.data,
+    pagination: {
+      page: entry.page,
+      pageSize: entry.pageSize,
+      total: entry.total || entry.data.length,
+      totalPages,
+      hasMore: entry.page < totalPages,
+    },
+  };
 }
 
 export function setCachedTransactions(
   accountId: string,
   transactions: Transaction[],
   startDate: Date | null = null,
-  endDate: Date | null = null
+  endDate: Date | null = null,
+  page = 1,
+  pageSize = 25,
+  total?: number
 ): void {
-  const key = generateCacheKey(accountId, startDate, endDate);
+  const key = generateCacheKey(accountId, startDate, endDate, page, pageSize);
 
   // Limpar entrada mais antiga se exceder limite
   if (cache.size >= MAX_CACHE_SIZE) {
@@ -61,11 +86,14 @@ export function setCachedTransactions(
   }
 
   cache.set(key, {
-    transactions: [...transactions],
+    data: [...transactions],
     timestamp: Date.now(),
     accountId,
     startDate: startDate ? startDate.toISOString() : null,
     endDate: endDate ? endDate.toISOString() : null,
+    page,
+    pageSize,
+    total,
   });
 }
 
