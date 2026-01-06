@@ -20,7 +20,7 @@ function TransactionItem({ transaction }: TransactionItemProps) {
     <div className={styles.transactionItem}>
       <div className={styles.transactionIcon}>
         <Icon
-          name={isCredit ? "ArrowUp" : "ArrowDown"}
+          name={isCredit ? "ArrowDown" : "ArrowUp"}
           size="medium"
           color={isCredit ? "success" : "warning"}
         />
@@ -30,9 +30,12 @@ function TransactionItem({ transaction }: TransactionItemProps) {
           {transactionType}
         </Text>
         {personName && (
-          <Text variant="caption" color="gray600" className={styles.personName}>
-            {personName}
-          </Text>
+          <div className={styles.personName}>
+            <Icon name="User" size="small" color="gray600" />
+            <Text variant="caption" color="gray600">
+              de {personName}
+            </Text>
+          </div>
         )}
       </div>
       <div className={styles.transactionRight}>
@@ -44,9 +47,12 @@ function TransactionItem({ transaction }: TransactionItemProps) {
         >
           {isCredit ? "+" : "-"}R$ {displayValue}
         </Text>
-        <Text variant="caption" color="gray600" className={styles.transactionDate}>
-          {formattedDate}
-        </Text>
+        <div className={styles.transactionDate}>
+          <Icon name="Calendar" size="small" color="gray600" />
+          <Text variant="caption" color="gray600">
+            {formattedDate}
+          </Text>
+        </div>
       </div>
     </div>
   );
