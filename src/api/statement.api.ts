@@ -5,11 +5,11 @@ import {
   StatementResponse,
   AccountResponse,
   AccountInfo,
-  BalanceResponse,
   PaginatedResponse,
 } from "@/types/statement";
 import { fetchApi } from "@/utils/apiClient";
-import { getCachedTransactions, setCachedTransactions, invalidateCache } from "./statementCache";
+import { calculateBalance } from "@/utils/balanceCalculator";
+import { invalidateCache } from "./statementCache";
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -85,9 +85,12 @@ export async function fetchAccount(): Promise<AccountInfo> {
 
 export async function fetchBalance(accountId: string): Promise<Balance> {
   try {
-    const response = await fetchApi(`/account/${accountId}/balance`);
-    const data: BalanceResponse = await response.json();
-    return data.result.balance;
+    const response = await fetchApi(`/account/${accountId}/statement`);
+    const data: StatementResponse = await response.json();
+
+    const transactions = data.result.transactions || [];
+
+    return calculateBalance(transactions);
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : "Erro ao buscar saldo");
   }
@@ -95,20 +98,10 @@ export async function fetchBalance(accountId: string): Promise<Balance> {
 
 export async function fetchTransactions(
   accountId: string,
-  filters?: TransactionFilters,
-  useCache = true
+  filters?: TransactionFilters
 ): Promise<PaginatedResponse<Transaction>> {
   const page = filters?.pagination?.page ?? 1;
   const pageSize = filters?.pagination?.pageSize ?? DEFAULT_PAGE_SIZE;
-
-  if (useCache) {
-    const startDate = filters?.dateRange?.startDate || null;
-    const endDate = filters?.dateRange?.endDate || null;
-    const cached = getCachedTransactions(accountId, startDate, endDate, page, pageSize);
-    if (cached) {
-      return cached;
-    }
-  }
 
   try {
     const url = buildStatementUrl(accountId, page, pageSize, filters);
@@ -132,20 +125,6 @@ export async function fetchTransactions(
         hasMore,
       },
     };
-
-    if (useCache) {
-      const startDate = filters?.dateRange?.startDate || null;
-      const endDate = filters?.dateRange?.endDate || null;
-      setCachedTransactions(
-        accountId,
-        result.data,
-        startDate,
-        endDate,
-        page,
-        pageSize,
-        pagination.total
-      );
-    }
 
     return result;
   } catch (error) {
