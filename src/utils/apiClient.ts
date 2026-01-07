@@ -1,7 +1,8 @@
 import { withRetry } from "./errorHandler";
+import { getApiBaseUrl } from "@/config/api.config";
 
-const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
-const REQUEST_TIMEOUT = 30000; // 30 segundos
+const API_BASE_URL = getApiBaseUrl();
+const REQUEST_TIMEOUT = 30000;
 
 function getAuthToken(): string | null {
   if (typeof window !== "undefined" && window.localStorage) {
@@ -46,7 +47,6 @@ export async function fetchApi(
     if (fetchOptions.signal) {
       const combinedController = new AbortController();
       const abort = () => {
-        // Limpar timeout se abortar manualmente
         if (timeoutController.timeoutId) {
           clearTimeout(timeoutController.timeoutId);
         }
