@@ -6,7 +6,11 @@
     "noEmit": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": [
     "src/**/*.test.ts",

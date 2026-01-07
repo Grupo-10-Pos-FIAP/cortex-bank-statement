@@ -1,7 +1,7 @@
+/* eslint-disable */
 const { merge } = require("webpack-merge");
 const path = require("path");
 const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const singleSpaDefaults = require("webpack-config-single-spa-react-ts");
 
 module.exports = (webpackConfigEnv, argv) => {
@@ -14,12 +14,17 @@ module.exports = (webpackConfigEnv, argv) => {
 
   // Modo standalone: desenvolvimento local sem Module Federation
   if (webpackConfigEnv.standalone) {
-    const { library, libraryTarget, libraryExport, libraryType, ...outputWithoutLibrary } =
-      defaultConfig.output || {};
-    const { outputModule, ...experimentsWithoutModule } = defaultConfig.experiments || {};
+    const {
+      library: _library,
+      libraryTarget: _libraryTarget,
+      libraryExport: _libraryExport,
+      libraryType: _libraryType,
+      ...outputWithoutLibrary
+    } = defaultConfig.output || {};
+    const { outputModule: _outputModule, ...experimentsWithoutModule } =
+      defaultConfig.experiments || {};
     const { externals: _externals, ...configWithoutExternals } = defaultConfig;
 
-    // Remover plugins de Module Federation, StandaloneSingleSpaPlugin e HtmlWebpackPlugin
     const finalPlugins =
       configWithoutExternals.plugins?.filter((plugin) => {
         const name = plugin.constructor.name;
@@ -30,7 +35,6 @@ module.exports = (webpackConfigEnv, argv) => {
         );
       }) || [];
 
-    // Construir configuração standalone substituindo completamente output, experiments e externals
     return {
       ...configWithoutExternals,
       entry: {
@@ -62,10 +66,13 @@ module.exports = (webpackConfigEnv, argv) => {
       },
       plugins: [
         ...finalPlugins,
-        // DefinePlugin: substitui process.env por valores estáticos no bundle
         new webpack.DefinePlugin({
           "process.env.API_BASE_URL": JSON.stringify(
             process.env.API_BASE_URL || "http://localhost:8080"
+          ),
+          "process.env.USE_MOCK": JSON.stringify(process.env.USE_MOCK || ""),
+          "process.env.MOCK_API_BASE_URL": JSON.stringify(
+            process.env.MOCK_API_BASE_URL || "http://localhost:8080"
           ),
           "process.env.NODE_ENV": JSON.stringify(
             process.env.NODE_ENV || webpackConfigEnv.mode || "development"
