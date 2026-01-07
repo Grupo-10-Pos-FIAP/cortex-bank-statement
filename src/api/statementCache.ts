@@ -8,11 +8,11 @@ interface CacheEntry {
   endDate: string | null;
   page: number;
   pageSize: number;
-  total?: number; // Total de registros no servidor
+  total?: number;
 }
 
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
-const MAX_CACHE_SIZE = 100; // Aumentado para suportar múltiplas páginas
+const CACHE_TTL = 5 * 60 * 1000;
+const MAX_CACHE_SIZE = 100;
 const cache = new Map<string, CacheEntry>();
 let cleanupInterval: NodeJS.Timeout | null = null;
 
@@ -77,7 +77,6 @@ export function setCachedTransactions(
 ): void {
   const key = generateCacheKey(accountId, startDate, endDate, page, pageSize);
 
-  // Limpar entrada mais antiga se exceder limite
   if (cache.size >= MAX_CACHE_SIZE) {
     const oldestKey = Array.from(cache.entries()).sort(
       (a, b) => a[1].timestamp - b[1].timestamp
