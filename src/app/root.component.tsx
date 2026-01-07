@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, Loading } from "@grupo10-pos-fiap/design-system";
-import { fetchAccount } from "@/api/statement.api";
-import { classifyError, AppError } from "@/utils/errorHandler";
-import ErrorMessage from "@/components/ErrorMessage";
+import { Text, Loading, Button, Card } from "@grupo10-pos-fiap/design-system";
+import { getAccountId } from "@/utils/accountStorage";
 import Statement from "../Statement";
 import styles from "./root.component.module.css";
 
@@ -13,31 +11,21 @@ export interface RootProps {
 export default function Root(_props: RootProps) {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [loadingAccount, setLoadingAccount] = useState<boolean>(true);
-  const [error, setError] = useState<AppError | null>(null);
 
-  const loadAccount = useCallback(async () => {
-    try {
-      setError(null);
-      setLoadingAccount(true);
-      const accountInfo = await fetchAccount();
-
-      if (accountInfo && accountInfo.id) {
-        setAccountId(accountInfo.id);
-      } else {
-        setAccountId(null);
-      }
-    } catch (err) {
-      const appError = classifyError(err);
-      setError(appError);
-      setAccountId(null);
-    } finally {
-      setLoadingAccount(false);
-    }
+  const loadAccountId = useCallback(() => {
+    setLoadingAccount(true);
+    const storedAccountId = getAccountId();
+    setAccountId(storedAccountId);
+    setLoadingAccount(false);
   }, []);
 
   useEffect(() => {
-    loadAccount();
-  }, [loadAccount]);
+    loadAccountId();
+  }, [loadAccountId]);
+
+  const handleRefresh = useCallback(() => {
+    loadAccountId();
+  }, [loadAccountId]);
 
   if (loadingAccount) {
     return (
@@ -47,20 +35,30 @@ export default function Root(_props: RootProps) {
     );
   }
 
-  if (error) {
-    return (
-      <div className={styles.container}>
-        <ErrorMessage error={error} onRetry={loadAccount} title="Erro ao carregar conta" />
-      </div>
-    );
-  }
-
   if (!accountId) {
     return (
       <div className={styles.container}>
-        <Text variant="body" color="error">
-          Conta não encontrada
-        </Text>
+        <Card title="Extrato" variant="elevated" color="base">
+          <Card.Section>
+            <div style={{ textAlign: "center", padding: "var(--spacing-xl)" }}>
+              <Text
+                variant="subtitle"
+                weight="semibold"
+                color="error"
+                style={{ marginBottom: "var(--spacing-md)" }}
+              >
+                Conta não identificada
+              </Text>
+              <Text variant="body" color="gray600" style={{ marginBottom: "var(--spacing-lg)" }}>
+                Não foi possível identificar a conta. Por favor, verifique se o accountId está
+                armazenado no localStorage.
+              </Text>
+              <Button variant="primary" onClick={handleRefresh} width="auto">
+                Atualizar Tela
+              </Button>
+            </div>
+          </Card.Section>
+        </Card>
       </div>
     );
   }
