@@ -17,7 +17,6 @@ interface UseStatementFiltersReturn {
   activeFiltersCount: number;
 }
 
-// Inicializar filtros com período padrão (últimos 30 dias)
 const getInitialFilters = (): TransactionFilters => {
   return {
     ...initialFilters,
@@ -33,12 +32,10 @@ export function useStatementFilters(): UseStatementFiltersReturn {
 
   const updateDateRange = useCallback((_start: Date | null, _end: Date | null) => {
     setFilters((prev) => {
-      // Normaliza as datas se startDate > endDate (inverte os valores)
       let startDate = _start;
       let endDate = _end;
 
       if (startDate && endDate && startDate > endDate) {
-        // Inverte as datas se a inicial for maior que a final
         startDate = _end;
         endDate = _start;
       }

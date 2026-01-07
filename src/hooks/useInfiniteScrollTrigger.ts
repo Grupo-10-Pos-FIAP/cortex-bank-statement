@@ -33,7 +33,6 @@ export function useInfiniteScrollTrigger({
     skip: !enabled || !onLoadMore || loading || isLoadingMore,
   });
 
-  // Dispara o carregamento quando o trigger entra em view
   useEffect(() => {
     if (inView && !loading && onLoadMore && !isLoadingMore && enabled) {
       setIsLoadingMore(true);
@@ -41,8 +40,6 @@ export function useInfiniteScrollTrigger({
     }
   }, [inView, loading, onLoadMore, isLoadingMore, enabled]);
 
-  // Reset isLoadingMore quando loading termina ou quando novos itens são carregados
-  // Como o scroll infinito é síncrono, resetamos quando loading muda para false
   useEffect(() => {
     if (!loading) {
       setIsLoadingMore(false);

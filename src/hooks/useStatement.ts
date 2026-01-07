@@ -11,9 +11,7 @@ interface UseStatementOptions {
 
 interface UseStatementReturn {
   balance: Balance | null;
-  // Todas as transações carregadas (acumuladas de todas as páginas)
   allTransactions: Transaction[];
-  // Transações filtradas client-side (busca, tipo, valor)
   filteredTransactions: Transaction[];
   loading: boolean;
   loadingMore: boolean;
@@ -50,18 +48,15 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
   const isLoadingMoreRef = useRef<boolean>(false);
   const filtersRef = useRef<TransactionFilters | undefined>(filters);
 
-  // Atualizar ref quando filters mudar
   useEffect(() => {
     filtersRef.current = filters;
   }, [filters]);
 
-  // Rastrear filtros de data anteriores para detectar mudanças
   const prevDateRangeRef = useRef<{
     startDate: Date | null;
     endDate: Date | null;
   } | null>(null);
 
-  // Rastrear filtros client-side anteriores para detectar mudanças significativas
   const prevClientFiltersRef = useRef<{
     searchQuery: string;
     transactionType: string;
@@ -93,7 +88,6 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
     }
   }, [accountId]);
 
-  // Detectar mudança nos filtros de data (server-side)
   const currentDateRange = useMemo(
     () => ({
       startDate: filters?.dateRange?.startDate || null,
@@ -102,7 +96,6 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
     [filters?.dateRange?.startDate, filters?.dateRange?.endDate]
   );
 
-  // Resetar quando filtros de data mudam
   useEffect(() => {
     const prev = prevDateRangeRef.current;
     const current = currentDateRange;
@@ -161,29 +154,18 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
 
         if (currentTransactionsRequestId.current === requestId) {
           if (append) {
-            // Acumular páginas - garantir que novas transações sejam adicionadas
             setAllTransactions((prev) => {
-              // Evitar duplicatas baseado no ID
               const existingIds = new Set(prev.map((t) => t.id));
               const newTransactions = response.data.filter((t) => !existingIds.has(t.id));
               return [...prev, ...newTransactions];
             });
           } else {
-            // Nova busca (reset)
             setAllTransactions(response.data);
           }
 
-          // Calcular hasMore de forma mais robusta
-          // Se estamos na última página, não há mais dados
           const isLastPage = response.pagination.page >= response.pagination.totalPages;
-
-          // Se a página retornou menos transações que o pageSize, é a última página
           const isLastPageByData = response.data.length < response.pagination.pageSize;
 
-          // Não há mais dados se:
-          // 1. Estamos na última página OU
-          // 2. A página retornou menos dados que o pageSize (última página) OU
-          // 3. A resposta indica que não há mais (hasMore: false)
           const hasMoreData =
             !isLastPage &&
             !isLastPageByData &&
@@ -220,7 +202,6 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
       return;
     }
 
-    // Verificação adicional: se já estamos na última página, não carregar mais
     if (pagination.page >= pagination.totalPages) {
       setPagination((prev) => ({ ...prev, hasMore: false }));
       return;
@@ -262,15 +243,12 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
     loadBalance();
   }, [loadBalance]);
 
-  // Carregar primeira página quando accountId muda ou quando filtros de data mudam
   useEffect(() => {
     if (accountId && filtersRef.current && allTransactions.length === 0 && !loading) {
       loadTransactions(1, false);
     }
   }, [accountId, currentDateRange, allTransactions.length, loading, loadTransactions]);
 
-  // Aplicar filtros client-side (busca, tipo, valor) nas transações já carregadas
-  // Usar valores primitivos dos filtros para detectar mudanças sem causar loop
   const filterKey = useMemo(() => {
     if (!filters) return "";
     return `${filters.searchQuery}|${filters.transactionType}|${filters.valueRange.min}|${filters.valueRange.max}`;
@@ -295,13 +273,9 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
     filtered = filterByValueRange(filtered, currentFilters.valueRange);
 
     return filtered;
-    // filterKey é necessário para detectar mudanças nos filtros sem causar loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTransactions, filterKey]);
 
-  // Detectar mudanças significativas nos filtros client-side
-  // Quando a busca muda drasticamente, pode ser útil resetar para melhorar UX
-  // Mas não resetamos automaticamente porque a busca é client-side
   useEffect(() => {
     const currentFilters = filtersRef.current;
     if (!currentFilters) return;
@@ -315,9 +289,6 @@ export function useStatement({ accountId, filters }: UseStatementOptions): UseSt
       },
     };
 
-    // Se os filtros client-side mudaram significativamente (especialmente busca),
-    // mas não resetamos porque a busca é client-side e queremos manter as transações carregadas
-    // O importante é garantir que o scroll infinito continue funcionando
     prevClientFiltersRef.current = currentClientFilters;
   }, [filterKey]);
 
