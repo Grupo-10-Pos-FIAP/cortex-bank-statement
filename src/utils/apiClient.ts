@@ -6,7 +6,7 @@ const REQUEST_TIMEOUT = 30000;
 
 function getAuthToken(): string | null {
   if (typeof window !== "undefined" && window.localStorage) {
-    return localStorage.getItem("authToken");
+    return localStorage.getItem("token");
   }
   return null;
 }
