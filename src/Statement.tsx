@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Card } from "@grupo10-pos-fiap/design-system";
-import { useStatement } from "@/hooks/useStatement";
+import { useStatementQuery } from "@/hooks/useStatementQuery";
 import { useStatementFilters } from "@/hooks/useStatementFilters";
 import { useSearch } from "@/hooks/useSearch";
 import StatementHeader from "@/components/StatementHeader";
@@ -11,15 +11,6 @@ import styles from "./Statement.module.css";
 
 interface StatementProps {
   accountId: string | null;
-}
-
-function useStatementEffects(
-  filters: ReturnType<typeof useStatementFilters>,
-  search: ReturnType<typeof useSearch>
-) {
-  useEffect(() => {
-    filters.updateSearchQuery(search.debouncedQuery);
-  }, [search.debouncedQuery, filters]);
 }
 
 function Statement({ accountId }: StatementProps) {
@@ -36,12 +27,10 @@ function Statement({ accountId }: StatementProps) {
     [filters.filters, search.debouncedQuery]
   );
 
-  const statement = useStatement({
+  const statement = useStatementQuery({
     accountId,
     filters: memoizedFilters,
   });
-
-  useStatementEffects(filters, search);
 
   const hasReachedEnd = useMemo(() => {
     if (statement.loading || statement.loadingMore) {
@@ -88,15 +77,17 @@ function Statement({ accountId }: StatementProps) {
     setIsBalanceVisible((prev) => !prev);
   }, []);
 
+  const { loadMore: loadMoreTransactions, refetch: refetchStatement } = statement;
+
   const handleLoadMore = useCallback(() => {
     if (statement.pagination.hasMore && !statement.loading) {
-      statement.loadMore();
+      loadMoreTransactions();
     }
-  }, [statement.pagination.hasMore, statement.loading, statement.loadMore]);
+  }, [statement.pagination.hasMore, statement.loading, loadMoreTransactions]);
 
   const handleRetry = useCallback(() => {
-    statement.refetch();
-  }, [statement]);
+    refetchStatement();
+  }, [refetchStatement]);
 
   if (!accountId) {
     return (
