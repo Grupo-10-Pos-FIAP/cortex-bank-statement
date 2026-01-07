@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+dist/
+build/
+coverage/
+
+# Generated files
+*.min.js
+*.min.css
+*.d.ts
+
+# Config files
+*.config.js
+webpack.config.js
+
+# Mock data (if needed)
+src/mock/**/*.js
+
+# Build outputs
+.cache/
+.eslintcache
+

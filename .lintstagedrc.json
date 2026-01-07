@@ -1,4 +1,5 @@
 {
-  "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
-  "*.{json,md,css}": ["prettier --write"]
+  "*.{ts,tsx}": ["eslint --fix --cache --cache-location .eslintcache", "prettier --write"],
+  "*.{json,md,css}": ["prettier --write"],
+  "*.{js,jsx}": ["eslint --fix --cache --cache-location .eslintcache", "prettier --write"]
 }

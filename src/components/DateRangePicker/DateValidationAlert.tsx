@@ -11,7 +11,7 @@ interface DateValidationAlertProps {
 export function DateValidationAlert({
   message,
   onDismiss,
-  duration = 500,
+  duration = 5000,
 }: DateValidationAlertProps) {
   const [isVisible, setIsVisible] = useState(false);
 

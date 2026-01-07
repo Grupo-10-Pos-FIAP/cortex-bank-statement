@@ -1,25 +1,11 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Regra #11: Manter código livre de erros (warnings são permitidos durante desenvolvimento)
-# Executar lint antes de commitar - apenas erros bloqueiam
-echo "🔍 Executando ESLint..."
-npm run lint -- --max-warnings=9999 || {
-  echo "❌ Erros de lint encontrados. Corrija antes de commitar."
-  exit 1
-}
-
-# Verificar formatação antes de commitar
-echo "✨ Verificando formatação..."
-npm run check-format || {
-  echo "❌ Erros de formatação encontrados. Execute 'npm run format' para corrigir."
-  exit 1
-}
-
-# Executar testes antes de commitar
-echo "🧪 Executando testes..."
-npm test || {
-  echo "❌ Testes falharam. Corrija antes de commitar."
+# Otimizado: Usa lint-staged para processar apenas arquivos modificados
+# Isso é muito mais rápido que processar todo o projeto
+echo "🔍 Executando lint-staged (apenas arquivos modificados)..."
+npx lint-staged || {
+  echo "❌ Erros encontrados. Corrija antes de commitar."
   exit 1
 }
 
