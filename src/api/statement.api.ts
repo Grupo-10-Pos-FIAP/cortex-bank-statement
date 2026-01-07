@@ -13,10 +13,61 @@ import { getCachedTransactions, setCachedTransactions, invalidateCache } from ".
 
 const DEFAULT_PAGE_SIZE = 25;
 
-/**
- * Busca informações da conta do usuário
- * Retorna apenas o necessário (AccountInfo)
- */
+function buildStatementUrl(
+  accountId: string,
+  page: number,
+  pageSize: number,
+  filters?: TransactionFilters
+): string {
+  let url = `/account/${accountId}/statement`;
+  const params = new URLSearchParams();
+
+  if (filters?.dateRange?.startDate) {
+    params.append("startDate", filters.dateRange.startDate.toISOString());
+  }
+  if (filters?.dateRange?.endDate) {
+    params.append("endDate", filters.dateRange.endDate.toISOString());
+  }
+
+  params.append("page", page.toString());
+  params.append("pageSize", pageSize.toString());
+
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
+
+  return url;
+}
+
+function processTransactions(transactions: Transaction[]): Transaction[] {
+  return transactions.sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+}
+
+function createPagination(
+  serverPagination: StatementResponse["result"]["pagination"] | undefined,
+  page: number,
+  pageSize: number,
+  transactionsCount: number
+) {
+  return (
+    serverPagination || {
+      page,
+      pageSize,
+      total: transactionsCount,
+      totalPages: Math.ceil(transactionsCount / pageSize),
+    }
+  );
+}
+
+function calculateHasMore(
+  pagination: { page: number; totalPages: number },
+  transactionsCount: number
+): boolean {
+  return pagination.page < pagination.totalPages && transactionsCount > 0;
+}
+
 export async function fetchAccount(): Promise<AccountInfo> {
   try {
     const response = await fetchApi(`/account`);
@@ -42,11 +93,6 @@ export async function fetchBalance(accountId: string): Promise<Balance> {
   }
 }
 
-/**
- * Busca transações com paginação server-side
- * Filtros de data são aplicados no servidor
- * Retorna resposta paginada com metadata
- */
 export async function fetchTransactions(
   accountId: string,
   filters?: TransactionFilters,
@@ -55,7 +101,6 @@ export async function fetchTransactions(
   const page = filters?.pagination?.page ?? 1;
   const pageSize = filters?.pagination?.pageSize ?? DEFAULT_PAGE_SIZE;
 
-  // Verificar cache
   if (useCache) {
     const startDate = filters?.dateRange?.startDate || null;
     const endDate = filters?.dateRange?.endDate || null;
@@ -66,46 +111,19 @@ export async function fetchTransactions(
   }
 
   try {
-    let url = `/account/${accountId}/statement`;
-
-    const params = new URLSearchParams();
-
-    // Filtros server-side (essenciais para paginação)
-    if (filters?.dateRange?.startDate) {
-      params.append("startDate", filters.dateRange.startDate.toISOString());
-    }
-    if (filters?.dateRange?.endDate) {
-      params.append("endDate", filters.dateRange.endDate.toISOString());
-    }
-
-    // Paginação server-side
-    params.append("page", page.toString());
-    params.append("pageSize", pageSize.toString());
-
-    if (params.toString()) {
-      url += `?${params.toString()}`;
-    }
-
+    const url = buildStatementUrl(accountId, page, pageSize, filters);
     const response = await fetchApi(url);
     const data: StatementResponse = await response.json();
 
     const transactions = data.result.transactions || [];
-
-    // Ordenação deve vir do servidor, mas garantimos aqui como fallback
-    const sortedTransactions = transactions.sort((a, b) => {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    });
-
-    const pagination = data.result.pagination || {
+    const sortedTransactions = processTransactions(transactions);
+    const pagination = createPagination(
+      data.result.pagination,
       page,
       pageSize,
-      total: sortedTransactions.length,
-      totalPages: Math.ceil(sortedTransactions.length / pageSize),
-    };
-
-    // Calcular hasMore: verifica se há mais páginas E se a página atual retornou dados
-    // Se a página atual está vazia ou é a última página, não há mais dados
-    const hasMore = pagination.page < pagination.totalPages && sortedTransactions.length > 0;
+      sortedTransactions.length
+    );
+    const hasMore = calculateHasMore(pagination, sortedTransactions.length);
 
     const result: PaginatedResponse<Transaction> = {
       data: sortedTransactions,
@@ -115,7 +133,6 @@ export async function fetchTransactions(
       },
     };
 
-    // Cache por página
     if (useCache) {
       const startDate = filters?.dateRange?.startDate || null;
       const endDate = filters?.dateRange?.endDate || null;
@@ -136,9 +153,6 @@ export async function fetchTransactions(
   }
 }
 
-/**
- * Invalida cache quando necessário (ex: após nova transação)
- */
 export function clearStatementCache(accountId: string): void {
   invalidateCache(accountId);
 }
