@@ -13,17 +13,27 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   border: 1px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.transactionItem:hover,
+.transactionItem:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-hover);
+  transform: translateY(-1px);
+  background: var(--color-bg-hover);
+}
+
 .transactionItem:focus,
-.transactionItem:focus-visible,
+.transactionItem:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-color: var(--color-primary);
+}
+
 .transactionItem:active {
+  transform: translateY(0);
   box-shadow: var(--shadow-sm);
-  transform: none;
-  border-color: transparent;
-  outline: none;
-  cursor: default;
 }
 
 .transactionIcon {

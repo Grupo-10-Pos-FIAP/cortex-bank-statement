@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Text, Icon } from "@grupo10-pos-fiap/design-system";
 import { Transaction } from "@/types/statement";
 import { formatValue } from "@/utils/formatters";
 import { formatDate } from "@/utils/dateUtils";
+import { getTransactionDetailsUrl } from "@/config/transactions.config";
 import styles from "./TransactionList.module.css";
 
 interface TransactionItemProps {
@@ -16,8 +17,35 @@ function TransactionItem({ transaction }: TransactionItemProps) {
   const displayValue = formatValue(Math.abs(transaction.value));
   const formattedDate = formatDate(transaction.date);
 
+  const handleClick = useCallback(() => {
+    if (transaction.id) {
+      const url = getTransactionDetailsUrl(transaction.id);
+      // Usa window.location.href que é a forma mais segura e compatível
+      // O Single-SPA está preparado para lidar com reloads de página
+      // e manter o estado necessário através do localStorage/sessionStorage
+      window.location.href = url;
+    }
+  }, [transaction.id]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick]
+  );
+
   return (
-    <div className={styles.transactionItem}>
+    <div
+      className={styles.transactionItem}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`Ver detalhes da transação ${transactionType}`}
+    >
       <div className={styles.transactionIcon}>
         <Icon
           name={isCredit ? "ArrowDown" : "ArrowUp"}
