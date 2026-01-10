@@ -7,6 +7,12 @@ import styles from "./Filters.module.css";
 
 const MAX_VALUE = 999999.99;
 
+const TRANSACTION_TYPE_OPTIONS = [
+  { label: "Todas", value: "all" },
+  { label: "Crédito", value: "Credit" },
+  { label: "Débito", value: "Debit" },
+] as const;
+
 interface FiltersProps {
   filters: TransactionFilters;
   onDateRangeChange: (_start: Date | null, _end: Date | null) => void;
@@ -15,6 +21,79 @@ interface FiltersProps {
   onReset: () => void;
   activeFiltersCount: number;
 }
+
+interface FilterDropdownProps {
+  label: string;
+  items: Array<{ label: string; value: string; onClick: () => void }>;
+  placeholder: string;
+  onValueChange?: (_value: string) => void;
+}
+
+const FilterDropdown = React.memo(
+  ({ label, items, placeholder, onValueChange }: FilterDropdownProps) => (
+    <div className={styles.filterGroup}>
+      <div className={styles.dropdownWrapper}>
+        <Dropdown
+          label={label}
+          items={items}
+          placeholder={placeholder}
+          onValueChange={onValueChange}
+          width="100%"
+        />
+      </div>
+    </div>
+  )
+);
+
+FilterDropdown.displayName = "FilterDropdown";
+
+interface FilterWrapperProps {
+  label: string;
+  children: React.ReactNode;
+}
+
+const FilterWrapper = React.memo(({ label, children }: FilterWrapperProps) => (
+  <div className={styles.filterGroup}>
+    <Text variant="small" weight="medium" className={styles.filterLabel}>
+      {label}
+    </Text>
+    <div className={styles.dropdownWrapper}>{children}</div>
+  </div>
+));
+
+FilterWrapper.displayName = "FilterWrapper";
+
+interface NumberInputProps {
+  label: string;
+  value: string;
+  onChange: (_e: React.ChangeEvent<HTMLInputElement>) => void;
+  hasError: boolean;
+  errorText?: string;
+}
+
+const NumberInput = React.memo(
+  ({ label, value, onChange, hasError, errorText }: NumberInputProps) => (
+    <div className={styles.rangeInputWrapper}>
+      <Input
+        type="number"
+        label={label}
+        value={value}
+        onChange={onChange}
+        placeholder="0,00"
+        min="0"
+        max={MAX_VALUE}
+        step="0.01"
+        variant="outlined"
+        status={hasError ? "error" : "neutral"}
+        width="100%"
+        ariaLabel={`Valor ${label.toLowerCase()}`}
+        helperText={hasError ? errorText : undefined}
+      />
+    </div>
+  )
+);
+
+NumberInput.displayName = "NumberInput";
 
 function ValueRangeInputs({
   valueRange,
@@ -31,31 +110,17 @@ function ValueRangeInputs({
     setMaxValue(valueRange.max?.toString() || "");
   }, [valueRange]);
 
-  const handleMinChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = useCallback(
+    (type: "min" | "max") => (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
-      setMinValue(inputValue);
+      const setter = type === "min" ? setMinValue : setMaxValue;
+      setter(inputValue);
 
       const numValue = parseFloat(inputValue);
       if (inputValue === "") {
-        onValueRangeChange({ ...valueRange, min: undefined });
+        onValueRangeChange({ ...valueRange, [type]: undefined });
       } else if (!isNaN(numValue) && numValue >= 0 && numValue <= MAX_VALUE) {
-        onValueRangeChange({ ...valueRange, min: numValue });
-      }
-    },
-    [valueRange, onValueRangeChange]
-  );
-
-  const handleMaxChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = e.target.value;
-      setMaxValue(inputValue);
-
-      const numValue = parseFloat(inputValue);
-      if (inputValue === "") {
-        onValueRangeChange({ ...valueRange, max: undefined });
-      } else if (!isNaN(numValue) && numValue >= 0 && numValue <= MAX_VALUE) {
-        onValueRangeChange({ ...valueRange, max: numValue });
+        onValueRangeChange({ ...valueRange, [type]: numValue });
       }
     },
     [valueRange, onValueRangeChange]
@@ -70,40 +135,20 @@ function ValueRangeInputs({
         Faixa de Valores
       </Text>
       <div className={styles.rangeInputs}>
-        <div className={styles.rangeInputWrapper}>
-          <Input
-            type="number"
-            label="Mínimo"
-            value={minValue}
-            onChange={handleMinChange}
-            placeholder="0,00"
-            min="0"
-            max={MAX_VALUE}
-            step="0.01"
-            variant="outlined"
-            status={isInvalidRange ? "error" : "neutral"}
-            width="100%"
-            ariaLabel="Valor mínimo"
-            helperText={isInvalidRange ? "Valor inválido" : undefined}
-          />
-        </div>
-        <div className={styles.rangeInputWrapper}>
-          <Input
-            type="number"
-            label="Máximo"
-            value={maxValue}
-            onChange={handleMaxChange}
-            placeholder="0,00"
-            min="0"
-            max={MAX_VALUE}
-            step="0.01"
-            variant="outlined"
-            status={isInvalidRange ? "error" : "neutral"}
-            width="100%"
-            ariaLabel="Valor máximo"
-            helperText={isInvalidRange ? "Valor inválido" : undefined}
-          />
-        </div>
+        <NumberInput
+          label="Mínimo"
+          value={minValue}
+          onChange={handleValueChange("min")}
+          hasError={isInvalidRange}
+          errorText="Valor inválido"
+        />
+        <NumberInput
+          label="Máximo"
+          value={maxValue}
+          onChange={handleValueChange("max")}
+          hasError={isInvalidRange}
+          errorText="Valor inválido"
+        />
       </div>
       {isInvalidRange && (
         <Text variant="caption" color="error" className={styles.errorMessage}>
@@ -125,15 +170,24 @@ function Filters({
   const minDate = useMemo(() => getMinAllowedDate(), []);
   const maxDate = useMemo(() => getMaxAllowedDate(), []);
 
+  const transactionTypeLabel = useMemo(() => {
+    const option = TRANSACTION_TYPE_OPTIONS.find((opt) => opt.value === filters.transactionType);
+    return option?.label || "Todas";
+  }, [filters.transactionType]);
+
+  const transactionTypeItems = useMemo(
+    () =>
+      TRANSACTION_TYPE_OPTIONS.map((option) => ({
+        ...option,
+        onClick: () => onTransactionTypeChange(option.value as TransactionTypeFilter),
+      })),
+    [onTransactionTypeChange]
+  );
+
   return (
     <div className={styles.filters}>
-      <div className={styles.filterHeader}></div>
-
       <div className={styles.filterRow}>
-        <div className={styles.filterGroup}>
-          <Text variant="body" weight="medium" className={styles.filterLabel}>
-            Período
-          </Text>
+        <FilterWrapper label="Período">
           <DateRangePicker
             startDate={filters.dateRange.startDate}
             endDate={filters.dateRange.endDate}
@@ -143,53 +197,25 @@ function Filters({
             minDate={minDate}
             maxDate={maxDate}
           />
-        </div>
+        </FilterWrapper>
 
-        <div className={styles.filterGroup}>
-          <Text variant="body" weight="medium" className={styles.filterLabel}>
-            Tipo de Transação
-          </Text>
-          <Dropdown
-            items={[
-              {
-                label: "Todas",
-                value: "all",
-                onClick: () => onTransactionTypeChange("all"),
-              },
-              {
-                label: "Crédito",
-                value: "Credit",
-                onClick: () => onTransactionTypeChange("Credit"),
-              },
-              {
-                label: "Débito",
-                value: "Debit",
-                onClick: () => onTransactionTypeChange("Debit"),
-              },
-            ]}
-            placeholder={
-              filters.transactionType === "all"
-                ? "Todas"
-                : filters.transactionType === "Credit"
-                ? "Crédito"
-                : "Débito"
-            }
-            onValueChange={(value) => onTransactionTypeChange(value as TransactionTypeFilter)}
-            width="100%"
-          />
-        </div>
+        <FilterDropdown
+          label="Tipo de Transação"
+          items={transactionTypeItems}
+          placeholder={transactionTypeLabel}
+          onValueChange={(value) => onTransactionTypeChange(value as TransactionTypeFilter)}
+        />
       </div>
 
       <ValueRangeInputs valueRange={filters.valueRange} onValueRangeChange={onValueRangeChange} />
 
-      {/* Botão Limpar Filtros */}
       {activeFiltersCount > 0 && (
         <div className={styles.filterActions}>
           <Button
             variant="outlined"
             onClick={onReset}
             aria-label="Limpar todos os filtros"
-            width="auto"
+            width="120px"
           >
             Limpar Filtros
           </Button>

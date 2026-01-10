@@ -10,40 +10,59 @@
 
 .periodInput {
   width: 100%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  font-size: var(--font-body);
+  justify-content: space-between;
+  gap: var(--spacing-xs);
+  min-height: 40px;
+  height: 40px;
+  padding: 10px 12px;
+  font-size: var(--font-small);
   font-family: var(--font-family);
   color: var(--color-content-default);
-  background-color: var(--color-bg-secondary);
-  border: 1.5px solid var(--color-gray200);
-  border-radius: var(--radius-lg);
+  background-color: var(--color-gray100);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
   box-sizing: border-box;
-  transition: all var(--transition-default) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color var(--transition-default), box-shadow var(--transition-default),
+    background-color var(--transition-default);
   outline: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   cursor: pointer;
+  appearance: none;
 }
 
 .periodInput:hover {
-  border-color: var(--color-primary);
-  background-color: var(--color-white);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
+  border-color: var(--color-border-hovered);
+  background-color: var(--color-gray100);
 }
 
 .periodInput:focus {
-  border-color: var(--color-primary);
+  border-color: var(--color-border-focused);
+  box-shadow: 0 0 0 2px rgba(28, 110, 164, 0.1);
   background-color: var(--color-white);
-  box-shadow: var(--shadow-focus-primary), 0 2px 8px rgba(28, 110, 164, 0.15);
-  transform: translateY(-1px);
+}
+
+.periodInput:focus-visible {
+  outline: none;
 }
 
 .periodText {
   flex: 1;
   text-align: left;
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.25;
+  color: var(--color-gray500);
+}
+
+.periodPlaceholder {
+  color: var(--color-gray400);
+  font-weight: var(--font-weight-regular);
+}
+
+.periodValue {
+  color: var(--color-content-default);
+  font-weight: var(--font-weight-semibold);
 }
 
 .periodDropdown {
@@ -90,7 +109,7 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  border: 2px solid var(--color-gray300);
+  border: 2px solid var(--color-border-default);
   background-color: var(--color-white);
   transition: all var(--transition-default);
   position: relative;
@@ -169,7 +188,7 @@
   font-family: var(--font-family);
   color: var(--color-content-default);
   background-color: var(--color-bg-secondary);
-  border: 1.5px solid var(--color-gray200);
+  border: 1.5px solid var(--color-border-default);
   border-radius: var(--radius-lg);
   box-sizing: border-box;
   transition: all var(--transition-default) cubic-bezier(0.4, 0, 0.2, 1);
@@ -379,7 +398,7 @@
 
 .yearButton:hover {
   background-color: var(--color-bg-hovered);
-  border-color: var(--color-primary);
+  border-color: var(--color-border-default);
 }
 
 .yearButtonActive {

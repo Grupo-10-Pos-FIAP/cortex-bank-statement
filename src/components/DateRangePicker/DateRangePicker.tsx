@@ -198,8 +198,10 @@ export default function DateRangePicker({
     };
   }, [isDropdownOpen]);
 
-  const periodDisplay =
-    startDate && endDate ? formatDateRange(startDate, endDate) : "Selecione o período";
+  const hasSelection = Boolean(startDate && endDate);
+  const periodDisplay = hasSelection
+    ? formatDateRange(startDate!, endDate!)
+    : "Selecione o período";
 
   return (
     <div className={styles.dateRangePicker} ref={containerRef}>
@@ -211,13 +213,19 @@ export default function DateRangePicker({
           aria-label="Selecionar período"
         >
           <CalendarIcon />
-          <span className={styles.periodText}>{periodDisplay}</span>
+          <span
+            className={`${styles.periodText} ${
+              hasSelection ? styles.periodValue : styles.periodPlaceholder
+            }`}
+          >
+            {periodDisplay}
+          </span>
           <svg
-            width="16"
-            height="16"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="#606060"
             strokeWidth="2"
             className={isDropdownOpen ? styles.dropdownIconOpen : ""}
           >

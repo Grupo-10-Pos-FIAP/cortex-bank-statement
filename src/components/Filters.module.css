@@ -39,7 +39,7 @@
 .filterRow {
   display: flex;
   gap: 1rem;
-  align-items: flex-start;
+  align-items: stretch;
   flex-wrap: wrap;
 }
 
@@ -47,23 +47,43 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
-  padding: var(--spacing-sm) 0;
   flex: 1;
-  min-width: 200px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .filterLabel {
   font-size: var(--font-small);
   font-weight: var(--font-weight-medium);
-  color: var(--color-content-secondary);
+  color: var(--color-content-default);
   margin-bottom: var(--spacing-xs);
+}
+
+.dropdownWrapper {
+  margin-top: 0;
+  width: calc(100% - 0px);
+  box-sizing: border-box;
+  position: relative;
+}
+
+.dropdownWrapper :global(.dropdown-wrapper) {
+  width: 100%;
+}
+
+.dropdownWrapper :global(.dropdown-default-trigger) {
+  width: 100%;
+  min-width: 0;
 }
 
 .rangeInputs {
   display: flex;
+  flex-direction: row;
   gap: var(--spacing-sm);
-  flex-wrap: wrap;
   margin-top: var(--spacing-xs);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .rangeInputWrapper {
@@ -71,7 +91,8 @@
   flex-direction: column;
   gap: var(--spacing-xs);
   flex: 1;
-  min-width: 150px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .filterActions {
@@ -147,7 +168,7 @@
   font-family: var(--font-family);
   color: var(--color-content-default);
   background-color: var(--color-bg-secondary);
-  border: 1.5px solid var(--color-gray200);
+  border: 1.5px solid var(--color-border-default);
   border-radius: var(--radius-lg);
   box-sizing: border-box;
   transition: all var(--transition-default) cubic-bezier(0.4, 0, 0.2, 1);
@@ -178,7 +199,7 @@
 .dateInput:disabled {
   background-color: var(--color-gray100);
   color: var(--color-content-disabled);
-  border-color: var(--color-gray200);
+  border-color: var(--color-border-default);
   cursor: not-allowed;
   opacity: 0.6;
   box-shadow: none;
@@ -217,7 +238,7 @@
   opacity: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .filters {
     padding: var(--spacing-md);
   }
@@ -225,18 +246,24 @@
   .filterRow {
     flex-direction: column;
     gap: var(--spacing-md);
+    align-items: stretch;
   }
 
   .filterGroup {
     min-width: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
   }
 
   .rangeInputs {
     flex-direction: column;
+    gap: var(--spacing-md);
   }
 
   .rangeInputWrapper {
-    min-width: 10%;
+    min-width: 0;
+    width: 100%;
   }
 
   .datePicker {
