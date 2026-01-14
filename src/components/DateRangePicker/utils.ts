@@ -29,10 +29,10 @@ export const getDaysInMonth = (date: Date): (Date | null)[] => {
 };
 
 export const formatDateForInput = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
 };
 
 function validateAndClampDateRange(
@@ -138,7 +138,23 @@ export const createInputChangeHandler = (
   onValidationError?: (_message: string) => void
 ) => {
   return (value: string) => {
-    const [year, month, day] = value.split("-").map(Number);
+    // Aceitar formato brasileiro (DD/MM/YYYY) ou ISO (YYYY-MM-DD)
+    let day: number, month: number, year: number;
+    
+    if (value.includes("/")) {
+      // Formato brasileiro: DD/MM/YYYY
+      const parts = value.split("/").map(Number);
+      if (parts.length !== 3) return;
+      [day, month, year] = parts;
+    } else if (value.includes("-")) {
+      // Formato ISO: YYYY-MM-DD (para compatibilidade)
+      const parts = value.split("-").map(Number);
+      if (parts.length !== 3) return;
+      [year, month, day] = parts;
+    } else {
+      return;
+    }
+
     const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0, 0));
 
     if (isNaN(date.getTime())) {

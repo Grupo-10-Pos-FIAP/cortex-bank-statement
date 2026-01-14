@@ -20,11 +20,12 @@ export const DateInput = React.memo(
       </Text>
       <div className={styles.inputGroup}>
         <input
-          type="date"
+          type="text"
+          readOnly
           className={styles.dateInput}
           value={value ? formatDateForInput(value) : ""}
-          max={formatDateForInput(new Date())}
           onChange={(e) => onChange(e.target.value)}
+          onFocus={onFocus}
           onClick={onFocus}
           aria-label={ariaLabel}
         />
