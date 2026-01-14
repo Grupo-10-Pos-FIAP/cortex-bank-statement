@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { useDebounce } from "use-debounce";
 import {
   TransactionFilters,
   initialFilters,
@@ -9,6 +10,7 @@ import { getLast30DaysStart, getLast30DaysEnd } from "@/utils/dateUtils";
 
 interface UseStatementFiltersReturn {
   filters: TransactionFilters;
+  debouncedFilters: TransactionFilters;
   updateDateRange: (_start: Date | null, _end: Date | null) => void;
   updateSearchQuery: (_query: string) => void;
   updateTransactionType: (_type: TransactionTypeFilter) => void;
@@ -29,6 +31,42 @@ const getInitialFilters = (): TransactionFilters => {
 
 export function useStatementFilters(): UseStatementFiltersReturn {
   const [filters, setFilters] = useState<TransactionFilters>(getInitialFilters());
+
+  // Debounce para data range - usar timestamps para comparar
+  const dateRangeStart = filters.dateRange.startDate?.getTime() ?? null;
+  const dateRangeEnd = filters.dateRange.endDate?.getTime() ?? null;
+  const [debouncedDateRangeStart] = useDebounce(dateRangeStart, 500);
+  const [debouncedDateRangeEnd] = useDebounce(dateRangeEnd, 500);
+
+  // Debounce para tipo de transação
+  const [debouncedTransactionType] = useDebounce(filters.transactionType, 500);
+
+  // Debounce para range de valores
+  const [debouncedValueMin] = useDebounce(filters.valueRange.min, 500);
+  const [debouncedValueMax] = useDebounce(filters.valueRange.max, 500);
+
+  // Construir filtros debounced
+  const debouncedFilters = useMemo<TransactionFilters>(() => {
+    return {
+      dateRange: {
+        startDate: debouncedDateRangeStart !== null ? new Date(debouncedDateRangeStart) : null,
+        endDate: debouncedDateRangeEnd !== null ? new Date(debouncedDateRangeEnd) : null,
+      },
+      searchQuery: filters.searchQuery, // searchQuery já tem seu próprio debounce no useSearch
+      transactionType: debouncedTransactionType,
+      valueRange: {
+        min: debouncedValueMin,
+        max: debouncedValueMax,
+      },
+    };
+  }, [
+    filters.searchQuery,
+    debouncedDateRangeStart,
+    debouncedDateRangeEnd,
+    debouncedTransactionType,
+    debouncedValueMin,
+    debouncedValueMax,
+  ]);
 
   const updateDateRange = useCallback((_start: Date | null, _end: Date | null) => {
     setFilters((prev) => {
@@ -96,6 +134,7 @@ export function useStatementFilters(): UseStatementFiltersReturn {
 
   return {
     filters,
+    debouncedFilters,
     updateDateRange,
     updateSearchQuery,
     updateTransactionType,
