@@ -119,11 +119,11 @@ function filterTransactionsByDate(transactions, startDate, endDate) {
     }
 
     if (startTimestamp !== null && endTimestamp === null) {
-      return txDateStart >= startTimestamp;
+      return txDateEnd >= startTimestamp;
     }
 
     if (startTimestamp === null && endTimestamp !== null) {
-      return txDateEnd <= endTimestamp;
+      return txDateStart <= endTimestamp;
     }
 
     return true;
