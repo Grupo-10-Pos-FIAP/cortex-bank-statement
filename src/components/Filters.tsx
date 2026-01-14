@@ -212,7 +212,7 @@ function Filters({
       {activeFiltersCount > 0 && (
         <div className={styles.filterActions}>
           <Button
-            variant="outlined"
+            variant="primary"
             onClick={onReset}
             aria-label="Limpar todos os filtros"
             width="120px"

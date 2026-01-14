@@ -91,7 +91,7 @@ function Statement({ accountId }: StatementProps) {
 
   if (!accountId) {
     return (
-      <Card title="Extrato" variant="elevated" color="base">
+      <Card title="Extrato" variant="elevated" color="white">
         <Card.Section>
           <p>Conta não encontrada</p>
         </Card.Section>
@@ -108,7 +108,7 @@ function Statement({ accountId }: StatementProps) {
         loading={statement.loading && !statement.balance}
       />
 
-      <Card title="Extrato" variant="elevated" color="base" className={styles.card}>
+      <Card title="Extrato" variant="elevated" color="white" className={styles.card}>
         <Card.Section className={styles.filtersSection}>
           <div className={styles.searchWrapper}>
             <Search

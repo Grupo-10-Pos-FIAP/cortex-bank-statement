@@ -44,7 +44,7 @@ export default function Root(_props: RootProps) {
     return (
       <QueryProvider>
         <div className={styles.container}>
-          <Card title="Extrato" variant="elevated" color="base">
+          <Card title="Extrato" variant="elevated" color="white">
             <Card.Section>
               <div style={{ textAlign: "center", padding: "var(--spacing-xl)" }}>
                 <Text
@@ -59,7 +59,7 @@ export default function Root(_props: RootProps) {
                   Não foi possível identificar a conta. Por favor, verifique se o accountId está
                   armazenado no localStorage.
                 </Text>
-                <Button variant="primary" onClick={handleRefresh} width="auto">
+                <Button variant="primary" onClick={handleRefresh} width="90px">
                   Atualizar Tela
                 </Button>
               </div>

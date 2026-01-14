@@ -21,7 +21,7 @@ function StatementHeader({
   const yieldPercentage = balance?.yieldPercentage;
 
   return (
-    <Card variant="elevated" color="base" className={styles.card}>
+    <Card variant="elevated" color="white" className={styles.card}>
       <div className={styles.header}>
         <Text variant="subtitle" weight="semibold" className={styles.headerTitle}>
           Saldo
