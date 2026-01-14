@@ -2,7 +2,12 @@ import { useMemo, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTransactionsQuery } from "./queries/useTransactionsQuery";
 import { TransactionFilters, Transaction, Balance } from "@/types/statement";
-import { filterBySearch, filterByType, filterByValueRange } from "@/utils/filterUtils";
+import {
+  filterBySearch,
+  filterByType,
+  filterByValueRange,
+  filterByDateRange,
+} from "@/utils/filterUtils";
 import { calculateBalance } from "@/utils/balanceCalculator";
 
 const DEFAULT_PAGE_SIZE = 25;
@@ -53,12 +58,24 @@ export function useStatementQuery({
   const filteredTransactions = useMemo(() => {
     let filtered = [...allTransactions];
 
+    filtered = filterByDateRange(
+      filtered,
+      filters.dateRange.startDate,
+      filters.dateRange.endDate
+    );
     filtered = filterBySearch(filtered, filters.searchQuery);
     filtered = filterByType(filtered, filters.transactionType);
     filtered = filterByValueRange(filtered, filters.valueRange);
 
     return filtered;
-  }, [allTransactions, filters.searchQuery, filters.transactionType, filters.valueRange]);
+  }, [
+    allTransactions,
+    filters.dateRange.startDate,
+    filters.dateRange.endDate,
+    filters.searchQuery,
+    filters.transactionType,
+    filters.valueRange,
+  ]);
 
   const pagination = useMemo(() => {
     const lastPage = transactionsQuery.data?.pages[transactionsQuery.data.pages.length - 1];
