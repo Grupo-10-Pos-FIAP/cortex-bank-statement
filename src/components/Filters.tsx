@@ -3,6 +3,7 @@ import { Button, Text, Input, Dropdown } from "@grupo10-pos-fiap/design-system";
 import { TransactionFilters, TransactionTypeFilter, ValueRange } from "@/types/statement";
 import DateRangePicker from "./DateRangePicker";
 import { getMinAllowedDate, getMaxAllowedDate } from "@/utils/dateUtils";
+import { maskCurrency, unmaskCurrency } from "@/utils/formatters";
 import styles from "./Filters.module.css";
 
 const MAX_VALUE = 999999.99;
@@ -26,14 +27,16 @@ interface FilterDropdownProps {
   label: string;
   items: Array<{ label: string; value: string; onClick: () => void }>;
   placeholder: string;
+  value?: string;
   onValueChange?: (_value: string) => void;
 }
 
 const FilterDropdown = React.memo(
-  ({ label, items, placeholder, onValueChange }: FilterDropdownProps) => (
+  ({ label, items, placeholder, value, onValueChange }: FilterDropdownProps) => (
     <div className={styles.filterGroup}>
       <div className={styles.dropdownWrapper}>
         <Dropdown
+          key={value}
           label={label}
           items={items}
           placeholder={placeholder}
@@ -75,14 +78,11 @@ const NumberInput = React.memo(
   ({ label, value, onChange, hasError, errorText }: NumberInputProps) => (
     <div className={styles.rangeInputWrapper}>
       <Input
-        type="number"
+        type="text"
         label={label}
         value={value}
         onChange={onChange}
-        placeholder="0,00"
-        min="0"
-        max={MAX_VALUE}
-        step="0.01"
+        placeholder="R$ 0,00"
         variant="outlined"
         status={hasError ? "error" : "neutral"}
         width="100%"
@@ -102,24 +102,41 @@ function ValueRangeInputs({
   valueRange: ValueRange;
   onValueRangeChange: (_range: ValueRange) => void;
 }) {
-  const [minValue, setMinValue] = useState<string>(valueRange.min?.toString() || "");
-  const [maxValue, setMaxValue] = useState<string>(valueRange.max?.toString() || "");
+  const [minValue, setMinValue] = useState<string>(
+    valueRange.min !== undefined ? maskCurrency(valueRange.min) : ""
+  );
+  const [maxValue, setMaxValue] = useState<string>(
+    valueRange.max !== undefined ? maskCurrency(valueRange.max) : ""
+  );
 
   useEffect(() => {
-    setMinValue(valueRange.min?.toString() || "");
-    setMaxValue(valueRange.max?.toString() || "");
+    setMinValue(valueRange.min !== undefined ? maskCurrency(valueRange.min) : "");
+    setMaxValue(valueRange.max !== undefined ? maskCurrency(valueRange.max) : "");
   }, [valueRange]);
 
   const handleValueChange = useCallback(
     (type: "min" | "max") => (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
       const setter = type === "min" ? setMinValue : setMaxValue;
-      setter(inputValue);
 
-      const numValue = parseFloat(inputValue);
+      // Se o campo estiver vazio, permite que o usuário comece a digitar
       if (inputValue === "") {
+        setter("");
         onValueRangeChange({ ...valueRange, [type]: undefined });
-      } else if (!isNaN(numValue) && numValue >= 0 && numValue <= MAX_VALUE) {
+        return;
+      }
+
+      // Aplica a máscara enquanto o usuário digita
+      const maskedValue = maskCurrency(inputValue);
+      setter(maskedValue);
+
+      // Converte o valor mascarado de volta para número
+      const numValue = unmaskCurrency(maskedValue);
+
+      // Aceita valores undefined, 0 ou valores válidos entre 0 e MAX_VALUE
+      if (numValue === undefined) {
+        onValueRangeChange({ ...valueRange, [type]: undefined });
+      } else if (numValue >= 0 && numValue <= MAX_VALUE) {
         onValueRangeChange({ ...valueRange, [type]: numValue });
       }
     },
@@ -131,19 +148,16 @@ function ValueRangeInputs({
 
   return (
     <div className={styles.filterGroup}>
-      <Text variant="body" weight="medium" className={styles.filterLabel}>
-        Faixa de Valores
-      </Text>
       <div className={styles.rangeInputs}>
         <NumberInput
-          label="Mínimo"
+          label="Valor mínimo"
           value={minValue}
           onChange={handleValueChange("min")}
           hasError={isInvalidRange}
           errorText="Valor inválido"
         />
         <NumberInput
-          label="Máximo"
+          label="Valor máximo"
           value={maxValue}
           onChange={handleValueChange("max")}
           hasError={isInvalidRange}
@@ -203,6 +217,7 @@ function Filters({
           label="Tipo de Transação"
           items={transactionTypeItems}
           placeholder={transactionTypeLabel}
+          value={filters.transactionType}
           onValueChange={(value) => onTransactionTypeChange(value as TransactionTypeFilter)}
         />
       </div>

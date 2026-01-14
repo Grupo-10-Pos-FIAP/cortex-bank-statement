@@ -3,15 +3,19 @@
   flex-direction: column;
   gap: var(--spacing-md);
   padding: var(--spacing-md);
-  background-color: var(--color-bg-secondary);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-default);
 }
 
 .filterHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.filterLabel {
+  font-size: var(--font-small);
+  font-weight: var(--font-weight-medium);
   margin-bottom: var(--spacing-xs);
 }
 
@@ -38,7 +42,7 @@
 
 .filterRow {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-sm);
   align-items: stretch;
   flex-wrap: wrap;
 }
@@ -52,13 +56,6 @@
   margin: 0;
   box-sizing: border-box;
   max-width: 100%;
-}
-
-.filterLabel {
-  font-size: var(--font-small);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-content-default);
-  margin-bottom: var(--spacing-xs);
 }
 
 .dropdownWrapper {
@@ -101,7 +98,6 @@
   gap: var(--spacing-sm);
   padding-top: var(--spacing-sm);
   margin-top: var(--spacing-xs);
-  border-top: 1px solid var(--color-border-default);
 }
 
 .errorMessage {
