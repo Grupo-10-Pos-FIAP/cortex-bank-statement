@@ -19,7 +19,6 @@
 
 .transactionItem:hover {
   box-shadow: var(--shadow-md);
-  border-color: var(--color-border-hover);
   transform: translateY(-1px);
   background: var(--color-bg-hover);
 }

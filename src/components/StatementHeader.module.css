@@ -16,6 +16,12 @@
   font-size: var(--font-subtitle);
 }
 
+.content {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+
 .balance {
   font-size: var(--font-h2);
   font-weight: var(--font-weight-bold);

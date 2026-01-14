@@ -34,20 +34,22 @@ function StatementHeader({
           aria-label={isVisible ? "Ocultar saldo" : "Mostrar saldo"}
         />
       </div>
-      {loading ? (
-        <Loading text="Carregando..." size="small" />
-      ) : (
-        <Card.Section>
-          <Text variant="h2" weight="bold" className={styles.balance}>
-            {displayValue}
-          </Text>
-          {yieldPercentage !== null && yieldPercentage !== undefined && (
-            <Text variant="body" color="success" className={styles.yield}>
-              Rendeu {yieldPercentage}% desde o mês passado
+      <div className={styles.content}>
+        {loading ? (
+          <Loading text="Carregando..." size="small" />
+        ) : (
+          <Card.Section>
+            <Text variant="h2" weight="bold" className={styles.balance}>
+              {displayValue}
             </Text>
-          )}
-        </Card.Section>
-      )}
+            {yieldPercentage !== null && yieldPercentage !== undefined && (
+              <Text variant="body" color="success" className={styles.yield}>
+                Rendeu {yieldPercentage}% desde o mês passado
+              </Text>
+            )}
+          </Card.Section>
+        )}
+      </div>
     </Card>
   );
 }
