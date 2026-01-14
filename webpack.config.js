@@ -1,4 +1,4 @@
-const { merge } = require("webpack-merge");
+const { mergeWithCustomize, customizeArray } = require("webpack-merge");
 const path = require("path");
 const webpack = require("webpack");
 const singleSpaDefaults = require("webpack-config-single-spa-react-ts");
@@ -13,9 +13,16 @@ module.exports = (webpackConfigEnv, argv) => {
 
   const PORT = 3004;
 
-  // Simplificado seguindo padrão do auth
-  // O webpack-config-single-spa-react-ts já lida com modo standalone automaticamente
-  return merge(defaultConfig, {
+  return mergeWithCustomize({
+    customizeArray: customizeArray({
+      plugins: (basePlugins, newPlugins) => {
+        const filteredBasePlugins = basePlugins.filter(
+          (plugin) => !(plugin instanceof webpack.DefinePlugin)
+        );
+        return [...filteredBasePlugins, ...newPlugins];
+      },
+    }),
+  })(defaultConfig, {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),
