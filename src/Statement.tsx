@@ -21,10 +21,10 @@ function Statement({ accountId }: StatementProps) {
 
   const memoizedFilters = useMemo(
     () => ({
-      ...filters.filters,
+      ...filters.debouncedFilters,
       searchQuery: search.debouncedQuery,
     }),
-    [filters.filters, search.debouncedQuery]
+    [filters.debouncedFilters, search.debouncedQuery]
   );
 
   const statement = useStatementQuery({
