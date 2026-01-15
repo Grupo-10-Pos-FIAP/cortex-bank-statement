@@ -26,6 +26,45 @@ export default function Root(_props: RootProps) {
     loadAccountId();
   }, [loadAccountId]);
 
+  useEffect(() => {
+    const handleAccountIdChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{ accountId: string }>;
+      const newAccountId = customEvent.detail?.accountId || getAccountId();
+      if (newAccountId) {
+        setAccountId((currentId) => {
+          if (currentId !== newAccountId) {
+            setLoadingAccount(false);
+            return newAccountId;
+          }
+          return currentId;
+        });
+      }
+    };
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "accountId") {
+        const newAccountId = e.newValue || getAccountId();
+        if (newAccountId) {
+          setAccountId((currentId) => {
+            if (currentId !== newAccountId) {
+              setLoadingAccount(false);
+              return newAccountId;
+            }
+            return currentId;
+          });
+        }
+      }
+    };
+
+    window.addEventListener("accountIdChanged", handleAccountIdChange);
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("accountIdChanged", handleAccountIdChange);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   const handleRefresh = useCallback(() => {
     loadAccountId();
   }, [loadAccountId]);
