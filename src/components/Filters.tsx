@@ -227,17 +227,18 @@ function Filters({
 
       {activeFiltersCount > 0 && (
         <div className={styles.filterActions}>
-          <Button
-            variant="primary"
-            onClick={onReset}
-            aria-label="Limpar todos os filtros"
-            width="auto"
-          >
-            <span className={styles.clearButtonContent}>
-              <EraserIcon />
-              Limpar Filtros
-            </span>
-          </Button>
+          <div className={styles.clearButtonWrapper}>
+            <Button
+              variant="primary"
+              onClick={onReset}
+              aria-label="Limpar todos os filtros"
+            >
+              <span className={styles.clearButtonContent}>
+                <EraserIcon />
+                Limpar Filtros
+              </span>
+            </Button>
+          </div>
         </div>
       )}
     </div>

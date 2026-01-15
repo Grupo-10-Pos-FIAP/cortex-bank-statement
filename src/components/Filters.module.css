@@ -107,6 +107,11 @@
   white-space: nowrap;
 }
 
+.clearButtonWrapper {
+  width: auto;
+  display: inline-block;
+}
+
 .errorMessage {
   font-size: var(--font-caption);
   color: var(--color-error);
@@ -239,6 +244,32 @@
 
 .dateInput:hover::-moz-calendar-picker-indicator {
   opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .filterActions {
+    justify-content: stretch !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .clearButtonWrapper {
+    width: 100% !important;
+    display: block !important;
+    flex: 1 1 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .clearButtonWrapper > *,
+  .clearButtonWrapper :global(button),
+  .clearButtonWrapper :global([role="button"]),
+  .clearButtonWrapper :global([data-testid="button"]) {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
 }
 
 @media (max-width: 1024px) {
