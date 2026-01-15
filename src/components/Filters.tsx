@@ -4,6 +4,7 @@ import { TransactionFilters, TransactionTypeFilter, ValueRange } from "@/types/s
 import DateRangePicker from "./DateRangePicker";
 import { getMinAllowedDate, getMaxAllowedDate } from "@/utils/dateUtils";
 import { maskCurrency, unmaskCurrency } from "@/utils/formatters";
+import { EraserIcon } from "./Filters/EraserIcon";
 import styles from "./Filters.module.css";
 
 const MAX_VALUE = 999999.99;
@@ -230,9 +231,12 @@ function Filters({
             variant="primary"
             onClick={onReset}
             aria-label="Limpar todos os filtros"
-            width="120px"
+            width="auto"
           >
-            Limpar Filtros
+            <span className={styles.clearButtonContent}>
+              <EraserIcon />
+              Limpar Filtros
+            </span>
           </Button>
         </div>
       )}
