@@ -78,7 +78,6 @@ function VirtualizedTransactionList({
   const totalHeight = useMemo(() => {
     const baseHeight = virtualizer.getTotalSize();
     if (hasReachedEnd) {
-      // Adiciona altura aproximada da mensagem (200px min-height + padding)
       return baseHeight + 200;
     }
     return baseHeight;

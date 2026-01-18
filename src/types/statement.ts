@@ -8,6 +8,7 @@ export interface Transaction {
   to?: string;
   anexo?: string;
   urlAnexo?: string;
+  status?: "Pending" | "Done";
 }
 
 export interface Balance {
@@ -21,7 +22,6 @@ export interface Account {
   type: string;
 }
 
-// Tipo simplificado para informações da conta
 export type AccountInfo = Account;
 
 export type TransactionTypeFilter = "all" | "Credit" | "Debit";
@@ -39,7 +39,6 @@ export interface TransactionFilters {
   searchQuery: string;
   transactionType: TransactionTypeFilter;
   valueRange: ValueRange;
-  // Paginação server-side (usado internamente pelo hook)
   pagination?: {
     page: number;
     pageSize: number;
@@ -102,7 +101,6 @@ export interface BalanceResponse {
   };
 }
 
-// Resposta paginada genérica
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: {

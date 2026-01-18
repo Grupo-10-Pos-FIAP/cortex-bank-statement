@@ -52,11 +52,30 @@
   gap: var(--spacing-xs);
 }
 
+.transactionTypeContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
 .transactionType {
   font-size: var(--font-body);
   font-weight: var(--font-weight-semibold);
   color: var(--color-content-default);
   line-height: 1.4;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-warning-light, #fff3cd);
+  color: var(--color-warning, #856404);
+  border-radius: var(--radius-sm, 4px);
+  font-size: var(--font-caption, 0.75rem);
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
 }
 
 .personName {

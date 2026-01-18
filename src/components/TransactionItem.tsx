@@ -20,9 +20,6 @@ function TransactionItem({ transaction }: TransactionItemProps) {
   const handleClick = useCallback(() => {
     if (transaction.id) {
       const url = getTransactionDetailsUrl(transaction.id);
-      // Usa window.location.href que é a forma mais segura e compatível
-      // O Single-SPA está preparado para lidar com reloads de página
-      // e manter o estado necessário através do localStorage/sessionStorage
       window.location.href = url;
     }
   }, [transaction.id]);
@@ -54,9 +51,14 @@ function TransactionItem({ transaction }: TransactionItemProps) {
         />
       </div>
       <div className={styles.transactionDetails}>
-        <Text variant="body" weight="medium" className={styles.transactionType}>
-          {transactionType}
-        </Text>
+        <div className={styles.transactionTypeContainer}>
+          <Text variant="body" weight="medium" className={styles.transactionType}>
+            {transactionType}
+          </Text>
+          {transaction.status === "Pending" && (
+            <span className={styles.statusBadge}>Pendente</span>
+          )}
+        </div>
         {personName && (
           <div className={styles.personName}>
             <Icon name="User" size="small" color="gray600" />
