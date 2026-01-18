@@ -1,14 +1,14 @@
 {
   "name": "@cortex-bank/statement",
   "scripts": {
-    "start": "webpack serve --port 3004",
+    "start": "cross-env USE_MOCK=false webpack serve --port 3004",
+    "start:dev": "cross-env USE_MOCK=false API_BASE_URL=http://localhost:8080 webpack serve --port 3004",
     "start:standalone": "webpack serve --port 4040 --env standalone",
     "clean:ports": "node src/scripts/clean-ports.js",
-    "start:mock": "npm run clean:ports && concurrently \"npm run mock:server\" \"npm run start:standalone\"",
-    "start:backend": "cross-env API_BASE_URL=http://localhost:8080 npm run start:standalone",
+    "start:mock": "npm run clean:ports && concurrently \"npm run mock:server\" \"cross-env USE_MOCK=true MOCK_API_BASE_URL=http://localhost:8080 webpack serve --port 3004\"",
+    "start:backend": "cross-env USE_MOCK=false API_BASE_URL=http://localhost:8080 npm run start:standalone",
     "mock:server": "node mock/test-server.js",
     "mock:generate": "node mock/generate-transactions.js",
-    "mock:validate": "node mock/validate-data.js",
     "build": "concurrently npm:build:*",
     "build:webpack": "webpack --mode=production",
     "analyze": "webpack --mode=production --env analyze",
