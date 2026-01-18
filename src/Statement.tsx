@@ -32,45 +32,16 @@ function Statement({ accountId }: StatementProps) {
     filters: memoizedFilters,
   });
 
+  const { pagination, loading, filteredTransactions } = statement;
+  const { hasMore, page, totalPages } = pagination;
+
   const hasReachedEnd = useMemo(() => {
-    if (statement.loading) {
+    if (loading || filteredTransactions.length === 0) {
       return false;
     }
 
-    if (statement.filteredTransactions.length === 0) {
-      return false;
-    }
-
-    if (!statement.pagination.hasMore) {
-      return true;
-    }
-
-    const isLastPage = statement.pagination.page >= statement.pagination.totalPages;
-    if (isLastPage) {
-      return true;
-    }
-
-    if (
-      statement.pagination.total > 0 &&
-      statement.allTransactions.length >= statement.pagination.total
-    ) {
-      return true;
-    }
-
-    if (statement.pagination.totalPages === 0 && statement.filteredTransactions.length > 0) {
-      return true;
-    }
-
-    return false;
-  }, [
-    statement.loading,
-    statement.pagination.hasMore,
-    statement.pagination.page,
-    statement.pagination.totalPages,
-    statement.pagination.total,
-    statement.filteredTransactions.length,
-    statement.allTransactions.length,
-  ]);
+    return !hasMore || page >= totalPages;
+  }, [loading, hasMore, page, totalPages, filteredTransactions.length]);
 
   const handleToggleBalanceVisibility = useCallback(() => {
     setIsBalanceVisible((prev) => !prev);
