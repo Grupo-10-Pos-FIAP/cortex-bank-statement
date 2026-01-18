@@ -150,16 +150,16 @@ export const useDateRangePicker = (
     ]
   );
 
-  const navigateMonth = useCallback((direction: "prev" | "next") => {
+  const navigateMonth = useCallback((_direction: "prev" | "next") => {
     setCurrentMonth((prev) => {
       const newDate = new Date(prev);
-      newDate.setMonth(prev.getMonth() + (direction === "prev" ? -1 : 1));
+      newDate.setMonth(prev.getMonth() + (_direction === "prev" ? -1 : 1));
       return newDate;
     });
   }, []);
 
-  const navigateToMonthYear = useCallback((month: number, year: number) => {
-    const newDate = new Date(year, month, 1);
+  const navigateToMonthYear = useCallback((_month: number, _year: number) => {
+    const newDate = new Date(_year, _month, 1);
     setCurrentMonth(newDate);
   }, []);
 

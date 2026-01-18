@@ -46,6 +46,38 @@ interface VirtualizedTransactionListProps {
   hasReachedEnd?: boolean;
 }
 
+const VIRTUAL_LIST_CONTAINER_STYLE: React.CSSProperties = {
+  height: 600,
+  overflow: "auto",
+  position: "relative",
+  padding: "var(--spacing-sm) 0",
+};
+
+const VIRTUAL_LIST_WRAPPER_STYLE: React.CSSProperties = {
+  width: "100%",
+  position: "relative",
+};
+
+const VIRTUAL_ITEM_STYLE: React.CSSProperties = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  padding: "0 var(--spacing-md)",
+};
+
+const LOAD_MORE_TRIGGER_STYLE: React.CSSProperties = {
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: "80px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "var(--spacing-md)",
+};
+
 function VirtualizedTransactionList({
   transactions,
   onLoadMore,
@@ -77,42 +109,24 @@ function VirtualizedTransactionList({
 
   const totalHeight = useMemo(() => {
     const baseHeight = virtualizer.getTotalSize();
-    if (hasReachedEnd) {
-      return baseHeight + 200;
-    }
-    return baseHeight;
+    return hasReachedEnd ? baseHeight + 200 : baseHeight;
   }, [virtualizer, hasReachedEnd]);
 
+  const virtualItems = virtualizer.getVirtualItems();
+  const totalSize = virtualizer.getTotalSize();
+
   return (
-    <div
-      ref={parentRef}
-      style={{
-        height: 600,
-        overflow: "auto",
-        position: "relative",
-        padding: "var(--spacing-sm) 0",
-      }}
-    >
-      <div
-        style={{
-          height: `${totalHeight}px`,
-          width: "100%",
-          position: "relative",
-        }}
-      >
-        {virtualizer.getVirtualItems().map((virtualItem) => {
+    <div ref={parentRef} style={VIRTUAL_LIST_CONTAINER_STYLE}>
+      <div style={{ ...VIRTUAL_LIST_WRAPPER_STYLE, height: `${totalHeight}px` }}>
+        {virtualItems.map((virtualItem) => {
           const transaction = transactions[virtualItem.index];
           return (
             <div
               key={virtualItem.key}
               style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
+                ...VIRTUAL_ITEM_STYLE,
                 height: `${virtualItem.size}px`,
                 transform: `translateY(${virtualItem.start}px)`,
-                padding: "0 var(--spacing-md)",
               }}
             >
               <TransactionItem transaction={transaction} />
@@ -123,7 +137,7 @@ function VirtualizedTransactionList({
           <div
             style={{
               position: "absolute",
-              top: `${virtualizer.getTotalSize()}px`,
+              top: `${totalSize}px`,
               left: 0,
               right: 0,
               padding: "var(--spacing-md)",
@@ -136,20 +150,7 @@ function VirtualizedTransactionList({
         )}
       </div>
       {onLoadMore && !hasReachedEnd && (
-        <div
-          ref={triggerRef}
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "80px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "var(--spacing-md)",
-          }}
-        >
+        <div ref={triggerRef} style={LOAD_MORE_TRIGGER_STYLE}>
           {loading && <Loading text="Carregando mais transações..." size="small" />}
         </div>
       )}

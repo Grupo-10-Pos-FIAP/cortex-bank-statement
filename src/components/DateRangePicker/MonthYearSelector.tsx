@@ -27,10 +27,10 @@ export const MonthYearSelector = React.memo(
     }, [currentYearValue]);
 
     const isMonthDisabled = useMemo(
-      () => (month: number, year: number) => {
-        if (year < currentYearValue) return false;
-        if (year > currentYearValue) return true;
-        return month > currentMonthValue;
+      () => (_month: number, _year: number) => {
+        if (_year < currentYearValue) return false;
+        if (_year > currentYearValue) return true;
+        return _month > currentMonthValue;
       },
       [currentYearValue, currentMonthValue]
     );
@@ -72,7 +72,7 @@ export const MonthYearSelector = React.memo(
             const isSelected = monthIndex === currentMonth && selectedYear === currentYear;
             return (
               <button
-                key={`month-${selectedYear}-${monthName}-${monthIndex}`}
+                key={`month-${selectedYear}-${monthName}`}
                 type="button"
                 className={`${styles.monthButton} ${isSelected ? styles.monthButtonActive : ""} ${
                   isDisabled ? styles.monthButtonDisabled : ""

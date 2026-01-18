@@ -136,6 +136,69 @@ function CustomDateInputs({
   );
 }
 
+function useDropdownClickOutside(
+  dropdownRef: React.RefObject<HTMLDivElement>,
+  isDropdownOpen: boolean,
+  setIsDropdownOpen: (_value: boolean) => void
+) {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen, dropdownRef, setIsDropdownOpen]);
+}
+
+function PeriodInputButton({
+  periodDisplay,
+  hasSelection,
+  isDropdownOpen,
+  onToggle,
+}: {
+  periodDisplay: string;
+  hasSelection: boolean;
+  isDropdownOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className={styles.periodInput}
+      onClick={onToggle}
+      aria-label="Selecionar período"
+    >
+      <CalendarIcon />
+      <span
+        className={`${styles.periodText} ${
+          hasSelection ? styles.periodValue : styles.periodPlaceholder
+        }`}
+      >
+        {periodDisplay}
+      </span>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#606060"
+        strokeWidth="2"
+        className={isDropdownOpen ? styles.dropdownIconOpen : ""}
+      >
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+  );
+}
+
 export default function DateRangePicker({
   startDate,
   endDate,
@@ -146,6 +209,8 @@ export default function DateRangePicker({
   maxDate,
 }: DateRangePickerProps) {
   const [validationMessage, setValidationMessage] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleValidationError = (message: string) => {
     setValidationMessage(message);
@@ -179,59 +244,23 @@ export default function DateRangePicker({
     onDateRangeChange
   );
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDropdownOpen]);
+  useDropdownClickOutside(dropdownRef, isDropdownOpen, setIsDropdownOpen);
 
   const hasSelection = Boolean(startDate && endDate);
-  const periodDisplay = hasSelection
-    ? formatDateRange(startDate!, endDate!)
-    : "Selecione o período";
+  const periodDisplay =
+    hasSelection && startDate && endDate
+      ? formatDateRange(startDate, endDate)
+      : "Selecione o período";
 
   return (
     <div className={styles.dateRangePicker} ref={containerRef}>
       <div className={styles.periodInputWrapper} ref={dropdownRef}>
-        <button
-          type="button"
-          className={styles.periodInput}
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          aria-label="Selecionar período"
-        >
-          <CalendarIcon />
-          <span
-            className={`${styles.periodText} ${
-              hasSelection ? styles.periodValue : styles.periodPlaceholder
-            }`}
-          >
-            {periodDisplay}
-          </span>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#606060"
-            strokeWidth="2"
-            className={isDropdownOpen ? styles.dropdownIconOpen : ""}
-          >
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
+        <PeriodInputButton
+          periodDisplay={periodDisplay}
+          hasSelection={hasSelection}
+          isDropdownOpen={isDropdownOpen}
+          onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
+        />
 
         {isDropdownOpen && (
           <div className={styles.periodDropdown}>

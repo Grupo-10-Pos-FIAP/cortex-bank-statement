@@ -7,6 +7,7 @@ import {
   ValueRange,
 } from "@/types/statement";
 import { getLast30DaysStart, getLast30DaysEnd } from "@/utils/dateUtils";
+import { DEBOUNCE_DELAY_FILTERS } from "@/constants";
 
 interface UseStatementFiltersReturn {
   filters: TransactionFilters;
@@ -33,13 +34,13 @@ export function useStatementFilters(): UseStatementFiltersReturn {
 
   const dateRangeStart = filters.dateRange.startDate?.getTime() ?? null;
   const dateRangeEnd = filters.dateRange.endDate?.getTime() ?? null;
-  const [debouncedDateRangeStart] = useDebounce(dateRangeStart, 500);
-  const [debouncedDateRangeEnd] = useDebounce(dateRangeEnd, 500);
+  const [debouncedDateRangeStart] = useDebounce(dateRangeStart, DEBOUNCE_DELAY_FILTERS);
+  const [debouncedDateRangeEnd] = useDebounce(dateRangeEnd, DEBOUNCE_DELAY_FILTERS);
 
-  const [debouncedTransactionType] = useDebounce(filters.transactionType, 500);
+  const [debouncedTransactionType] = useDebounce(filters.transactionType, DEBOUNCE_DELAY_FILTERS);
 
-  const [debouncedValueMin] = useDebounce(filters.valueRange.min, 500);
-  const [debouncedValueMax] = useDebounce(filters.valueRange.max, 500);
+  const [debouncedValueMin] = useDebounce(filters.valueRange.min, DEBOUNCE_DELAY_FILTERS);
+  const [debouncedValueMax] = useDebounce(filters.valueRange.max, DEBOUNCE_DELAY_FILTERS);
 
   const debouncedFilters = useMemo<TransactionFilters>(() => {
     return {

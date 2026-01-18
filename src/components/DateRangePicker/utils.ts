@@ -304,37 +304,37 @@ export const createDateClickHandler = (
 export const createDateValidators = (
   startDate: Date | null,
   endDate: Date | null,
-  minDate?: Date,
-  maxDate?: Date
+  _minDate?: Date,
+  _maxDate?: Date
 ) => {
   const minAllowedDate = getMinAllowedDate();
   const maxAllowedDate = getMaxAllowedDate();
 
-  const effectiveMinDate = minDate
-    ? minDate > minAllowedDate
-      ? minDate
+  const effectiveMinDate = _minDate
+    ? _minDate > minAllowedDate
+      ? _minDate
       : minAllowedDate
     : minAllowedDate;
-  const effectiveMaxDate = maxDate
-    ? maxDate < maxAllowedDate
-      ? maxDate
+  const effectiveMaxDate = _maxDate
+    ? _maxDate < maxAllowedDate
+      ? _maxDate
       : maxAllowedDate
     : maxAllowedDate;
 
   return {
-    isDateInRange: (date: Date) => {
+    isDateInRange: (_date: Date) => {
       if (!startDate || !endDate) return false;
-      return date >= startDate && date <= endDate;
+      return _date >= startDate && _date <= endDate;
     },
-    isDateSelected: (date: Date) => {
+    isDateSelected: (_date: Date) => {
       if (!startDate && !endDate) return false;
-      const dateStr = date.toDateString();
+      const dateStr = _date.toDateString();
       return startDate?.toDateString() === dateStr || endDate?.toDateString() === dateStr;
     },
-    isDateDisabled: (date: Date) => {
+    isDateDisabled: (_date: Date) => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const dateToCheck = new Date(date);
+      const dateToCheck = new Date(_date);
       dateToCheck.setHours(0, 0, 0, 0);
 
       if (dateToCheck > today) return true;
