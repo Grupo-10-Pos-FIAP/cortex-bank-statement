@@ -33,7 +33,7 @@ function Statement({ accountId }: StatementProps) {
   });
 
   const hasReachedEnd = useMemo(() => {
-    if (statement.loading || statement.loadingMore) {
+    if (statement.loading) {
       return false;
     }
 
@@ -64,7 +64,6 @@ function Statement({ accountId }: StatementProps) {
     return false;
   }, [
     statement.loading,
-    statement.loadingMore,
     statement.pagination.hasMore,
     statement.pagination.page,
     statement.pagination.totalPages,

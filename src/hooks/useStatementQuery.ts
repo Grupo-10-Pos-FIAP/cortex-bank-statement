@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTransactionsQuery } from "./queries/useTransactionsQuery";
 import { TransactionFilters, Transaction, Balance } from "@/types/statement";
@@ -20,9 +20,8 @@ interface UseStatementQueryOptions {
 interface UseStatementQueryReturn {
   balance: Balance | null;
   allTransactions: Transaction[];
-  filteredTransactions: Transaction[]; // All filtered transactions (for display with pagination)
+  filteredTransactions: Transaction[];
   loading: boolean;
-  loadingMore: boolean; // Always false now, kept for compatibility
   error: ReturnType<typeof useTransactionsQuery>["error"];
   pagination: {
     page: number;
@@ -90,7 +89,7 @@ export function useStatementQuery({
   }, [currentPage, filteredTotal, totalPages, visibleItemsCount]);
 
   // Reset visible items count when filters change significantly
-  useMemo(() => {
+  useEffect(() => {
     if (filteredTotal < visibleItemsCount) {
       setVisibleItemsCount(Math.min(DEFAULT_PAGE_SIZE, filteredTotal));
     }
@@ -122,7 +121,6 @@ export function useStatementQuery({
     allTransactions,
     filteredTransactions: visibleTransactions,
     loading: transactionsQuery.isLoading,
-    loadingMore: false, // No longer needed since we're not fetching
     error: transactionsQuery.error ?? null,
     pagination,
     loadMore,

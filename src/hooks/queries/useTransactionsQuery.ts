@@ -22,25 +22,7 @@ function serializeFiltersForQueryKey(filters: TransactionFilters): string {
 }
 
 export function useTransactionsQuery({ accountId, filters }: UseTransactionsQueryOptions) {
-  const startDateTimestamp = filters.dateRange.startDate?.getTime();
-  const endDateTimestamp = filters.dateRange.endDate?.getTime();
-  const searchQuery = filters.searchQuery;
-  const transactionType = filters.transactionType;
-  const valueRangeMin = filters.valueRange.min;
-  const valueRangeMax = filters.valueRange.max;
-
-  const serializedFilters = useMemo(
-    () => serializeFiltersForQueryKey(filters),
-    [
-      filters,
-      startDateTimestamp,
-      endDateTimestamp,
-      searchQuery,
-      transactionType,
-      valueRangeMin,
-      valueRangeMax,
-    ]
-  );
+  const serializedFilters = useMemo(() => serializeFiltersForQueryKey(filters), [filters]);
 
   return useQuery<Transaction[], AppError>({
     queryKey: ["transactions", accountId, serializedFilters],

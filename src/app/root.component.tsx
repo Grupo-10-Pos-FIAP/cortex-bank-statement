@@ -21,9 +21,7 @@ export default function Root() {
   }, [loadAccountId]);
 
   useEffect(() => {
-    const handleAccountIdChange = (event: Event) => {
-      const customEvent = event as CustomEvent<{ accountId: string }>;
-      const newAccountId = customEvent.detail?.accountId || getAccountId();
+    const updateAccountId = (newAccountId: string | null) => {
       if (newAccountId) {
         setAccountId((currentId) => {
           if (currentId !== newAccountId) {
@@ -35,18 +33,16 @@ export default function Root() {
       }
     };
 
+    const handleAccountIdChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{ accountId: string }>;
+      const newAccountId = customEvent.detail?.accountId || getAccountId();
+      updateAccountId(newAccountId);
+    };
+
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === "accountId") {
         const newAccountId = e.newValue || getAccountId();
-        if (newAccountId) {
-          setAccountId((currentId) => {
-            if (currentId !== newAccountId) {
-              setLoadingAccount(false);
-              return newAccountId;
-            }
-            return currentId;
-          });
-        }
+        updateAccountId(newAccountId);
       }
     };
 

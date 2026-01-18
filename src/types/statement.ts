@@ -55,26 +55,6 @@ export const initialFilters: TransactionFilters = {
   valueRange: {},
 };
 
-export interface InfiniteScrollConfig {
-  currentBatch: number;
-  batchSize: number;
-}
-
-export interface InfiniteScrollInfo {
-  currentBatch: number;
-  batchSize: number;
-  totalBatches: number;
-  totalItems: number;
-  hasMore: boolean;
-  isEmpty: boolean;
-  hasReachedEnd: boolean;
-}
-
-export const defaultInfiniteScrollConfig: InfiniteScrollConfig = {
-  currentBatch: 1,
-  batchSize: 25,
-};
-
 export const VIRTUALIZATION_THRESHOLD = 50;
 
 export interface StatementResponse {
@@ -87,28 +67,6 @@ export interface StatementResponse {
       total: number;
       totalPages: number;
     };
-  };
-}
-
-export interface BalanceResponse {
-  message: string;
-  result: {
-    balance: {
-      value: number;
-      yield?: number;
-      yieldPercentage?: number;
-    };
-  };
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    pageSize: number;
-    total: number;
-    totalPages: number;
-    hasMore: boolean;
   };
 }
 

@@ -19,16 +19,6 @@ export function formatDateRange(startDate: Date, endDate: Date): string {
   return `${formatDate(startDate)} - ${formatDate(endDate)}`;
 }
 
-export function getStartOfMonth(): Date {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), 1);
-}
-
-export function getEndOfMonth(): Date {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth() + 1, 0);
-}
-
 export function getLast30DaysStart(): Date {
   const now = new Date();
   const startDate = new Date(now);

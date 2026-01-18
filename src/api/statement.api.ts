@@ -1,4 +1,4 @@
-import { Transaction, StatementResponse, AccountResponse, AccountInfo } from "@/types/statement";
+import { Transaction, StatementResponse } from "@/types/statement";
 import { fetchApi } from "@/utils/apiClient";
 
 function buildStatementUrl(accountId: string): string {
@@ -9,21 +9,6 @@ function processTransactions(transactions: Transaction[]): Transaction[] {
   return transactions.sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
-}
-
-export async function fetchAccount(): Promise<AccountInfo> {
-  try {
-    const response = await fetchApi(`/account`);
-    const data: AccountResponse = await response.json();
-
-    if (!data.result.account || data.result.account.length === 0) {
-      throw new Error("Conta não encontrada");
-    }
-
-    return data.result.account[0];
-  } catch (error) {
-    throw new Error(error instanceof Error ? error.message : "Erro ao buscar conta");
-  }
 }
 
 /**
