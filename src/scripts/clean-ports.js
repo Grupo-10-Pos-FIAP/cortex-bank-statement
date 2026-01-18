@@ -6,6 +6,7 @@ const execAsync = promisify(exec);
 const PORTS = {
   MOCK_SERVER: 8080,
   WEBPACK_DEV_SERVER: 3004,
+  WEBPACK_DEV_SERVER_STANDALONE: 4040,
 };
 
 const isWindows = process.platform === "win32";
@@ -121,6 +122,10 @@ async function main() {
   const results = {
     mockServer: await cleanPort(PORTS.MOCK_SERVER, "Mock Server"),
     webpackDevServer: await cleanPort(PORTS.WEBPACK_DEV_SERVER, "Webpack Dev Server"),
+    webpackDevServerStandalone: await cleanPort(
+      PORTS.WEBPACK_DEV_SERVER_STANDALONE,
+      "Webpack Dev Server (Standalone)"
+    ),
   };
 
   // eslint-disable-next-line no-console
@@ -128,7 +133,10 @@ async function main() {
 
   const totalCleaned =
     (results.mockServer.cleaned ? results.mockServer.pids.length : 0) +
-    (results.webpackDevServer.cleaned ? results.webpackDevServer.pids.length : 0);
+    (results.webpackDevServer.cleaned ? results.webpackDevServer.pids.length : 0) +
+    (results.webpackDevServerStandalone.cleaned
+      ? results.webpackDevServerStandalone.pids.length
+      : 0);
 
   if (totalCleaned > 0) {
     // eslint-disable-next-line no-console
