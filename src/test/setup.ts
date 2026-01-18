@@ -3,7 +3,6 @@ import { afterEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import React from "react";
 
-// Mock completo do design-system para todos os testes
 vi.mock("@grupo10-pos-fiap/design-system", () => {
   const CardSection = ({
     children,
@@ -79,7 +78,6 @@ vi.mock("@grupo10-pos-fiap/design-system", () => {
   };
 });
 
-// Limpar após cada teste
 afterEach(() => {
   cleanup();
 });

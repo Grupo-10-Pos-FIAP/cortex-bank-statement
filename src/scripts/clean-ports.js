@@ -38,10 +38,8 @@ async function findProcessByPort(port) {
   try {
     let command;
     if (isWindows) {
-      // Windows: netstat -ano | findstr :PORT
       command = `netstat -ano | findstr ":${port}"`;
     } else {
-      // Linux/macOS: lsof -ti:PORT
       command = `lsof -ti:${port}`;
     }
 

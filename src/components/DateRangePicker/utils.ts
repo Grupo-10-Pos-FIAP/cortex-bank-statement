@@ -46,7 +46,6 @@ function validateAndClampDateRange(
     return { startDate: clampedStart, endDate: clampedEnd };
   }
 
-  // Comparar apenas as datas (sem hora) para evitar falsos positivos
   const originalStart = new Date(start);
   originalStart.setHours(0, 0, 0, 0);
   const originalEnd = new Date(end);
@@ -57,7 +56,6 @@ function validateAndClampDateRange(
   const clampedEndDate = new Date(clampedEnd);
   clampedEndDate.setHours(23, 59, 59, 999);
 
-  // Só mostrar alerta se as datas realmente foram alteradas
   const startChanged = clampedStartDate.getTime() !== originalStart.getTime();
   const endChanged = clampedEndDate.getTime() !== originalEnd.getTime();
 
@@ -138,16 +136,13 @@ export const createInputChangeHandler = (
   onValidationError?: (_message: string) => void
 ) => {
   return (value: string) => {
-    // Aceitar formato brasileiro (DD/MM/YYYY) ou ISO (YYYY-MM-DD)
     let day: number, month: number, year: number;
     
     if (value.includes("/")) {
-      // Formato brasileiro: DD/MM/YYYY
       const parts = value.split("/").map(Number);
       if (parts.length !== 3) return;
       [day, month, year] = parts;
     } else if (value.includes("-")) {
-      // Formato ISO: YYYY-MM-DD (para compatibilidade)
       const parts = value.split("-").map(Number);
       if (parts.length !== 3) return;
       [year, month, day] = parts;
@@ -170,7 +165,6 @@ export const createInputChangeHandler = (
       return;
     }
 
-    // Validar e corrigir se a data estiver fora do limite de 90 dias (hoje - 89 dias até hoje)
     let correctedDate = date;
     const minDate = getMinAllowedDate();
     const maxDate = getMaxAllowedDate();
@@ -225,7 +219,6 @@ export const createDateClickHandler = (
     const dayToCheck = new Date(day);
     dayToCheck.setHours(0, 0, 0, 0);
 
-    // Validar se a data não excede o limite de 90 dias
     if (!isDateWithin90DayLimit(day)) {
       return;
     }
@@ -237,7 +230,6 @@ export const createDateClickHandler = (
         endDate
       );
 
-      // Comparar apenas as datas (sem hora) para evitar falsos positivos
       if (clampedStart && clampedEnd && endDate) {
         const newStartDate = new Date(newStart);
         newStartDate.setHours(0, 0, 0, 0);
@@ -273,13 +265,11 @@ export const createDateClickHandler = (
         newEnd = startDate;
       }
 
-      // Validar e corrigir intervalo
       const { startDate: clampedStart, endDate: clampedEnd } = clampDateRangeTo90DayLimit(
         newStart,
         newEnd
       );
 
-      // Comparar apenas as datas (sem hora) para evitar falsos positivos
       if (clampedStart && clampedEnd) {
         const newStartDate = new Date(newStart);
         newStartDate.setHours(0, 0, 0, 0);
@@ -320,7 +310,6 @@ export const createDateValidators = (
   const minAllowedDate = getMinAllowedDate();
   const maxAllowedDate = getMaxAllowedDate();
 
-  // Usar o limite de 90 dias como base, mas respeitar minDate/maxDate se fornecidos
   const effectiveMinDate = minDate
     ? minDate > minAllowedDate
       ? minDate
@@ -348,11 +337,8 @@ export const createDateValidators = (
       const dateToCheck = new Date(date);
       dateToCheck.setHours(0, 0, 0, 0);
 
-      // Não permitir datas futuras além de hoje
       if (dateToCheck > today) return true;
-      // Não permitir datas anteriores ao limite mínimo (hoje - 89 dias)
       if (dateToCheck < effectiveMinDate) return true;
-      // Não permitir datas além do limite máximo (hoje)
       if (dateToCheck > effectiveMaxDate) return true;
       return false;
     },

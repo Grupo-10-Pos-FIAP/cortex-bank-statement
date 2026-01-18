@@ -32,7 +32,6 @@ export function getEndOfMonth(): Date {
 export function getLast30DaysStart(): Date {
   const now = new Date();
   const startDate = new Date(now);
-  // Hoje - 29 dias = 30 dias no total (incluindo hoje)
   startDate.setDate(now.getDate() - 29);
   startDate.setHours(0, 0, 0, 0);
   return startDate;
@@ -82,7 +81,6 @@ export function isDateWithin90DayLimit(date: Date): boolean {
   const minDate = getMinAllowedDate();
   minDate.setHours(0, 0, 0, 0);
 
-  // Não permitir datas anteriores a hoje - 89 dias nem futuras além de hoje
   return dateToCheck >= minDate && dateToCheck <= today;
 }
 
@@ -103,13 +101,10 @@ export function isDateRangeWithin90DayLimit(startDate: Date, endDate: Date): boo
   const end = new Date(endDate);
   end.setHours(23, 59, 59, 999);
 
-  // Verificar se ambas as datas estão dentro do limite (hoje - 89 dias até hoje)
   if (start < minDate || end > today) {
     return false;
   }
 
-  // Verificar se o intervalo não excede 90 dias
-  // Usar Math.floor para calcular dias completos e adicionar 1 para incluir ambos os dias
   const daysDiff = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   return daysDiff <= 90;
 }
@@ -164,40 +159,32 @@ export function clampDateRangeTo90DayLimit(
   correctedStart.setHours(0, 0, 0, 0);
   correctedEnd.setHours(23, 59, 59, 999);
 
-  // Verificar se o intervalo está dentro dos limites antes de fazer ajustes
   const daysDiff =
     Math.floor((correctedEnd.getTime() - correctedStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   const isWithinDateLimits = correctedStart >= minDate && correctedEnd <= today;
   const isWithin90Days = daysDiff <= 90;
 
-  // Se já está dentro dos limites, retornar as datas originais (sem ajustes de hora)
   if (isWithinDateLimits && isWithin90Days) {
     return { startDate: new Date(startDate), endDate: new Date(endDate) };
   }
 
-  // Corrigir data inicial se for anterior ao limite mínimo
   if (correctedStart < minDate) {
     correctedStart = new Date(minDate);
     correctedStart.setHours(0, 0, 0, 0);
   }
 
-  // Corrigir data final se for futura além de hoje
   if (correctedEnd > today) {
     correctedEnd = new Date(today);
     correctedEnd.setHours(23, 59, 59, 999);
   }
 
-  // Verificar se o intervalo não excede 90 dias
-  // Usar Math.floor para calcular dias completos e adicionar 1 para incluir ambos os dias
   const finalDaysDiff =
     Math.floor((correctedEnd.getTime() - correctedStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
   if (finalDaysDiff > 90) {
-    // Ajustar data inicial para manter o intervalo de 90 dias
     correctedStart = new Date(correctedEnd);
     correctedStart.setDate(correctedStart.getDate() - 89);
     correctedStart.setHours(0, 0, 0, 0);
 
-    // Se a data inicial ajustada for anterior ao limite mínimo, usar o limite mínimo
     if (correctedStart < minDate) {
       correctedStart = new Date(minDate);
       correctedStart.setHours(0, 0, 0, 0);

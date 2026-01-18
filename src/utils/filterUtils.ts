@@ -52,7 +52,6 @@ export function filterByDateRange(
     ).getTime();
 
     if (startTimestamp !== null && endTimestamp !== null) {
-      // Verifica se o início do dia da transação está dentro do intervalo
       return txDateStart >= startTimestamp && txDateStart <= endTimestamp;
     }
 

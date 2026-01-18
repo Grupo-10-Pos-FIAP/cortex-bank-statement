@@ -4,7 +4,6 @@ import { vi } from "vitest";
 import Root from "./root.component";
 import * as accountStorage from "../utils/accountStorage";
 
-// Mock the accountStorage
 vi.mock("@/utils/accountStorage", () => ({
   getAccountId: vi.fn(),
 }));
@@ -23,11 +22,9 @@ describe("Root component", () => {
 
     render(<Root />);
 
-    // The component shows "Carregando..." while loading account
     // @ts-expect-error - Vitest globals types
     expect(screen.getByText(/carregando/i)).toBeInTheDocument();
 
-    // Wait for account to load
     await waitFor(() => {
       // @ts-expect-error - Vitest globals types
       expect(accountStorage.getAccountId).toHaveBeenCalled();
@@ -59,7 +56,6 @@ describe("Root component", () => {
       expect(accountStorage.getAccountId).toHaveBeenCalled();
     });
 
-    // Statement component should be rendered (it will show "Extrato" title)
     await waitFor(() => {
       // @ts-expect-error - Vitest globals types
       expect(screen.getByText(/extrato/i)).toBeInTheDocument();

@@ -120,21 +120,17 @@ function ValueRangeInputs({
       const inputValue = e.target.value;
       const setter = type === "min" ? setMinValue : setMaxValue;
 
-      // Se o campo estiver vazio, permite que o usuário comece a digitar
       if (inputValue === "") {
         setter("");
         onValueRangeChange({ ...valueRange, [type]: undefined });
         return;
       }
 
-      // Aplica a máscara enquanto o usuário digita
       const maskedValue = maskCurrency(inputValue);
       setter(maskedValue);
 
-      // Converte o valor mascarado de volta para número
       const numValue = unmaskCurrency(maskedValue);
 
-      // Aceita valores undefined, 0 ou valores válidos entre 0 e MAX_VALUE
       if (numValue === undefined) {
         onValueRangeChange({ ...valueRange, [type]: undefined });
       } else if (numValue >= 0 && numValue <= MAX_VALUE) {

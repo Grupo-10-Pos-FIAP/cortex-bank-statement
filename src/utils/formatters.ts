@@ -30,7 +30,6 @@ export function maskCurrency(value: number | string): string {
     return "";
   }
 
-  // Se for número, formata diretamente
   if (typeof value === "number") {
     return new Intl.NumberFormat("pt-BR", {
       style: "currency",
@@ -38,18 +37,14 @@ export function maskCurrency(value: number | string): string {
     }).format(value);
   }
 
-  // Remove tudo que não é dígito
   const numericValue = String(value).replace(/\D/g, "");
 
   if (numericValue === "") {
     return "";
   }
 
-  // Permite digitar "0" e continuar digitando
-  // Converte para número e divide por 100 para ter centavos
   const numberValue = Number(numericValue) / 100;
 
-  // Formata como moeda brasileira
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -66,17 +61,14 @@ export function unmaskCurrency(maskedValue: string): number | undefined {
     return undefined;
   }
 
-  // Remove tudo que não é dígito
   const numericValue = maskedValue.replace(/\D/g, "");
 
   if (numericValue === "") {
     return undefined;
   }
 
-  // Converte para número e divide por 100 para ter centavos
   const numberValue = Number(numericValue) / 100;
 
-  // Retorna 0 se o valor for 0, ou undefined se for NaN
   if (isNaN(numberValue)) {
     return undefined;
   }

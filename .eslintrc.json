@@ -22,7 +22,6 @@
     "jest": true
   },
   "rules": {
-    // Regra #11: Manter código livre de erros e avisos
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "no-debugger": "error",
     "no-unused-vars": [
@@ -33,22 +32,18 @@
       }
     ],
 
-    // Regra #2: Evitar código duplicado - detectar imports duplicados
     "no-duplicate-imports": "error",
 
-    // Regra #3: KISS - manter código simples
     "complexity": ["warn", 15],
     "max-depth": ["warn", 4],
     "max-lines-per-function": ["warn", { "max": 100, "skipBlankLines": true }],
 
-    // React - Regra #7: Memorização e performance
     "react/jsx-key": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react-hooks/rules-of-hooks": "error",
     "react/no-array-index-key": "warn",
     "react/no-unused-prop-types": "warn",
 
-    // TypeScript - Regra #11: Tipos corretos
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-unused-vars": [
@@ -59,7 +54,6 @@
       }
     ],
 
-    // Regra #1: Arquitetura - evitar imports entre camadas incorretas
     "no-restricted-imports": [
       "warn",
       {
@@ -72,10 +66,8 @@
       }
     ],
 
-    // Regra #8: Documentação - exigir JSDoc em funções complexas
     "require-jsdoc": "off",
 
-    // Boas práticas gerais
     "prefer-const": "error",
     "no-var": "error",
     "prefer-arrow-callback": "warn",

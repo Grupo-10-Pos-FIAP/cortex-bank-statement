@@ -42,8 +42,6 @@ export function useInfiniteScroll(
   }, [totalItems, isLoading]);
 
   const hasReachedEnd = useMemo(() => {
-    // Mostra mensagem quando não há mais itens para carregar, há itens disponíveis,
-    // não está carregando, e o usuário já visualizou todos os itens carregados
     return !hasMore && totalItems > 0 && !isLoading;
   }, [hasMore, totalItems, isLoading]);
 

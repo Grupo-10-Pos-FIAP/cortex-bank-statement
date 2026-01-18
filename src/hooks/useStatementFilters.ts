@@ -32,27 +32,23 @@ const getInitialFilters = (): TransactionFilters => {
 export function useStatementFilters(): UseStatementFiltersReturn {
   const [filters, setFilters] = useState<TransactionFilters>(getInitialFilters());
 
-  // Debounce para data range - usar timestamps para comparar
   const dateRangeStart = filters.dateRange.startDate?.getTime() ?? null;
   const dateRangeEnd = filters.dateRange.endDate?.getTime() ?? null;
   const [debouncedDateRangeStart] = useDebounce(dateRangeStart, 500);
   const [debouncedDateRangeEnd] = useDebounce(dateRangeEnd, 500);
 
-  // Debounce para tipo de transação
   const [debouncedTransactionType] = useDebounce(filters.transactionType, 500);
 
-  // Debounce para range de valores
   const [debouncedValueMin] = useDebounce(filters.valueRange.min, 500);
   const [debouncedValueMax] = useDebounce(filters.valueRange.max, 500);
 
-  // Construir filtros debounced
   const debouncedFilters = useMemo<TransactionFilters>(() => {
     return {
       dateRange: {
         startDate: debouncedDateRangeStart !== null ? new Date(debouncedDateRangeStart) : null,
         endDate: debouncedDateRangeEnd !== null ? new Date(debouncedDateRangeEnd) : null,
       },
-      searchQuery: filters.searchQuery, // searchQuery já tem seu próprio debounce no useSearch
+      searchQuery: filters.searchQuery,
       transactionType: debouncedTransactionType,
       valueRange: {
         min: debouncedValueMin,

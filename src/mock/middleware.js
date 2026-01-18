@@ -76,7 +76,6 @@ function handleAccountEndpoint(req, res) {
       message: "Conta encontrada e carregada com sucesso",
       result: {
         account: [account],
-        // Removido transactions e cards - não são utilizados
       },
     });
   } catch (error) {

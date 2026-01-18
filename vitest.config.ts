@@ -6,7 +6,6 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   test: {
-    // Regra #9: Testar Tudo - Configuração de cobertura
     globals: true,
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
@@ -16,7 +15,6 @@ export default defineConfig({
       tsconfig: "./tsconfig.test.json",
     },
 
-    // Configuração de cobertura (Regra #9)
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov", "html"],
@@ -31,8 +29,6 @@ export default defineConfig({
         "**/coverage/**",
         "src/test/**",
       ],
-      // Cobertura mínima ajustada temporariamente para 40% (será aumentada gradualmente)
-      // TODO: Aumentar threshold para 70% conforme cobertura aumenta
       thresholds: {
         branches: 40,
         functions: 40,

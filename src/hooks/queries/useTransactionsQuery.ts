@@ -20,7 +20,6 @@ function serializeFiltersForQueryKey(filters: TransactionFilters): string {
     searchQuery: filters.searchQuery,
     transactionType: filters.transactionType,
     valueRange: filters.valueRange,
-    // Não incluir pagination na query key (é gerenciado pelo pageParam)
   });
 }
 
@@ -70,8 +69,8 @@ export function useTransactionsQuery({ accountId, filters }: UseTransactionsQuer
       }
       return lastPage.pagination.page + 1;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos
-    gcTime: 10 * 60 * 1000, // 10 minutos
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     throwOnError: false,

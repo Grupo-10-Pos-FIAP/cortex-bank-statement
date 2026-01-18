@@ -13,7 +13,6 @@ interface SearchProps {
 function Search({ value, onChange, placeholder = "Buscar transações..." }: SearchProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    // Truncar se exceder limite
     const truncatedValue =
       inputValue.length > MAX_SEARCH_LENGTH ? inputValue.slice(0, MAX_SEARCH_LENGTH) : inputValue;
     onChange(truncatedValue);
