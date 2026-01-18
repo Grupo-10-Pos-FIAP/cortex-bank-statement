@@ -13,6 +13,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*", "src/declarations.d.ts", "vitest.config.ts", ".vitest.d.ts"],
+  "include": ["src/**/*", "src/declarations.d.ts"],
   "exclude": ["src/**/*.test*", "src/**/*.spec*"]
 }
