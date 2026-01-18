@@ -9,7 +9,6 @@ import {
 } from "@/types/statement";
 import { fetchApi } from "@/utils/apiClient";
 import { calculateBalance } from "@/utils/balanceCalculator";
-import { invalidateCache } from "./statementCache";
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -130,8 +129,4 @@ export async function fetchTransactions(
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : "Erro ao buscar transações");
   }
-}
-
-export function clearStatementCache(accountId: string): void {
-  invalidateCache(accountId);
 }

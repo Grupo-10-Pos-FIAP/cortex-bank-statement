@@ -12,7 +12,6 @@ interface UseStatementFiltersReturn {
   filters: TransactionFilters;
   debouncedFilters: TransactionFilters;
   updateDateRange: (_start: Date | null, _end: Date | null) => void;
-  updateSearchQuery: (_query: string) => void;
   updateTransactionType: (_type: TransactionTypeFilter) => void;
   updateValueRange: (_range: ValueRange) => void;
   resetFilters: () => void;
@@ -84,13 +83,6 @@ export function useStatementFilters(): UseStatementFiltersReturn {
     });
   }, []);
 
-  const updateSearchQuery = useCallback((_query: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      searchQuery: _query,
-    }));
-  }, []);
-
   const updateTransactionType = useCallback((_type: TransactionTypeFilter) => {
     setFilters((prev) => ({
       ...prev,
@@ -132,7 +124,6 @@ export function useStatementFilters(): UseStatementFiltersReturn {
     filters,
     debouncedFilters,
     updateDateRange,
-    updateSearchQuery,
     updateTransactionType,
     updateValueRange,
     resetFilters,
