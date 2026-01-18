@@ -63,14 +63,14 @@ export function useStatementFilters(): UseStatementFiltersReturn {
     debouncedValueMax,
   ]);
 
-  const updateDateRange = useCallback((_start: Date | null, _end: Date | null) => {
+  const updateDateRange = useCallback((start: Date | null, end: Date | null) => {
     setFilters((prev) => {
-      let startDate = _start;
-      let endDate = _end;
+      let startDate = start;
+      let endDate = end;
 
       if (startDate && endDate && startDate > endDate) {
-        startDate = _end;
-        endDate = _start;
+        startDate = end;
+        endDate = start;
       }
 
       return {
@@ -83,17 +83,17 @@ export function useStatementFilters(): UseStatementFiltersReturn {
     });
   }, []);
 
-  const updateTransactionType = useCallback((_type: TransactionTypeFilter) => {
+  const updateTransactionType = useCallback((type: TransactionTypeFilter) => {
     setFilters((prev) => ({
       ...prev,
-      transactionType: _type,
+      transactionType: type,
     }));
   }, []);
 
-  const updateValueRange = useCallback((_range: ValueRange) => {
+  const updateValueRange = useCallback((range: ValueRange) => {
     setFilters((prev) => ({
       ...prev,
-      valueRange: _range,
+      valueRange: range,
     }));
   }, []);
 

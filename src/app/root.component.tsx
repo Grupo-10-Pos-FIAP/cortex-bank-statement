@@ -5,11 +5,7 @@ import { getAccountId } from "@/utils/accountStorage";
 import Statement from "../Statement";
 import styles from "./root.component.module.css";
 
-export interface RootProps {
-  name?: string;
-}
-
-export default function Root(_props: RootProps) {
+export default function Root() {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [loadingAccount, setLoadingAccount] = useState<boolean>(true);
 

@@ -158,8 +158,8 @@ export const useDateRangePicker = (
     });
   }, []);
 
-  const navigateToMonthYear = useCallback((_month: number, _year: number) => {
-    const newDate = new Date(_year, _month, 1);
+  const navigateToMonthYear = useCallback((month: number, year: number) => {
+    const newDate = new Date(year, month, 1);
     setCurrentMonth(newDate);
   }, []);
 
