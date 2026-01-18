@@ -1,7 +1,6 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useTransactionsQuery } from "./queries/useTransactionsQuery";
-import { TransactionFilters, Transaction, Balance } from "@/types/statement";
+import { TransactionFilters, Transaction, Balance, Pagination } from "@/types/statement";
 import {
   filterBySearch,
   filterByType,
@@ -9,8 +8,7 @@ import {
   filterByDateRange,
 } from "@/utils/filterUtils";
 import { calculateBalance } from "@/utils/balanceCalculator";
-
-const DEFAULT_PAGE_SIZE = 25;
+import { DEFAULT_PAGE_SIZE } from "@/constants";
 
 interface UseStatementQueryOptions {
   accountId: string | null;
@@ -19,27 +17,18 @@ interface UseStatementQueryOptions {
 
 interface UseStatementQueryReturn {
   balance: Balance | null;
-  allTransactions: Transaction[];
   filteredTransactions: Transaction[];
   loading: boolean;
   error: ReturnType<typeof useTransactionsQuery>["error"];
-  pagination: {
-    page: number;
-    pageSize: number;
-    total: number;
-    totalPages: number;
-    hasMore: boolean;
-  };
+  pagination: Pagination;
   loadMore: () => void;
   refetch: () => void;
-  invalidateCache: () => void;
 }
 
 export function useStatementQuery({
   accountId,
   filters,
 }: UseStatementQueryOptions): UseStatementQueryReturn {
-  const queryClient = useQueryClient();
   const [visibleItemsCount, setVisibleItemsCount] = useState(DEFAULT_PAGE_SIZE);
 
   const transactionsQuery = useTransactionsQuery({ accountId, filters });
@@ -105,12 +94,6 @@ export function useStatementQuery({
     transactionsQuery.refetch();
   }, [transactionsQuery]);
 
-  const invalidateCache = useCallback(() => {
-    if (accountId) {
-      queryClient.invalidateQueries({ queryKey: ["transactions", accountId] });
-    }
-  }, [accountId, queryClient]);
-
   // Return only visible transactions for display (paginated client-side)
   const visibleTransactions = useMemo(() => {
     return filteredTransactions.slice(0, visibleItemsCount);
@@ -118,13 +101,11 @@ export function useStatementQuery({
 
   return {
     balance,
-    allTransactions,
     filteredTransactions: visibleTransactions,
     loading: transactionsQuery.isLoading,
     error: transactionsQuery.error ?? null,
     pagination,
     loadMore,
     refetch,
-    invalidateCache,
   };
 }

@@ -22,8 +22,6 @@ export interface Account {
   type: string;
 }
 
-export type AccountInfo = Account;
-
 export type TransactionTypeFilter = "all" | "Credit" | "Debit";
 
 export interface ValueRange {
@@ -39,10 +37,6 @@ export interface TransactionFilters {
   searchQuery: string;
   transactionType: TransactionTypeFilter;
   valueRange: ValueRange;
-  pagination?: {
-    page: number;
-    pageSize: number;
-  };
 }
 
 export const initialFilters: TransactionFilters = {
@@ -57,22 +51,18 @@ export const initialFilters: TransactionFilters = {
 
 export const VIRTUALIZATION_THRESHOLD = 50;
 
+export interface Pagination {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  hasMore?: boolean;
+}
+
 export interface StatementResponse {
   message: string;
   result: {
     transactions: Transaction[];
-    pagination?: {
-      page: number;
-      pageSize: number;
-      total: number;
-      totalPages: number;
-    };
-  };
-}
-
-export interface AccountResponse {
-  message: string;
-  result: {
-    account: Account[];
+    pagination?: Pagination;
   };
 }
