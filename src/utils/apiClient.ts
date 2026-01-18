@@ -1,5 +1,6 @@
 import { withRetry } from "./errorHandler";
 import { getApiBaseUrl } from "@/config/api.config";
+import { AUTH_REDIRECT_PATH } from "@/constants";
 
 const API_BASE_URL = getApiBaseUrl();
 const REQUEST_TIMEOUT = 30000;
@@ -75,7 +76,7 @@ export async function fetchApi(
       if (response.status === 401) {
         if (typeof window !== "undefined" && window.localStorage) {
           localStorage.removeItem("token");
-          window.location.href = "/auth";
+          window.location.href = AUTH_REDIRECT_PATH;
         }
         const errorText = await response.text().catch(() => response.statusText);
         throw new Error(`Erro na requisição: ${response.status} ${errorText}`);

@@ -1,4 +1,5 @@
 import { Transaction, Balance } from "@/types/statement";
+import { YIELD_PERCENTAGE } from "@/constants";
 
 export function calculateBalance(transactions: Transaction[]): Balance {
   const total = transactions.reduce((sum, transaction) => {
@@ -7,6 +8,6 @@ export function calculateBalance(transactions: Transaction[]): Balance {
 
   return {
     value: total,
-    yieldPercentage: 3,
+    yieldPercentage: YIELD_PERCENTAGE,
   };
 }
