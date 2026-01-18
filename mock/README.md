@@ -97,7 +97,7 @@ Para testar com autenticação:
 Para gerar novas transações mock:
 
 ```bash
-node src/mock/generate-transactions.js
+node mock/generate-transactions.js
 ```
 
 Isso irá gerar transações do período de setembro de 2025 até a data atual.

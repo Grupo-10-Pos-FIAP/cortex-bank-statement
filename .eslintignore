@@ -14,7 +14,7 @@ coverage/
 webpack.config.js
 
 # Mock data (if needed)
-src/mock/**/*.js
+mock/**/*.js
 
 # Build outputs
 .cache/
