@@ -11,7 +11,11 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   });
 
-  const PORT = 3004;
+  // Detecta a porta do argumento --port, process.env.PORT ou usa a padrão
+  // O webpack-cli passa --port como string, então precisamos converter
+  const PORT = argv.port 
+    ? parseInt(argv.port, 10) 
+    : (process.env.PORT ? parseInt(process.env.PORT, 10) : 3004);
 
   return mergeWithCustomize({
     customizeArray: customizeArray({
@@ -29,18 +33,15 @@ module.exports = (webpackConfigEnv, argv) => {
       },
     },
     devServer: {
+      // A porta pode ser sobrescrita por --port na linha de comando
+      // O webpack-dev-server dá prioridade ao --port sobre esta configuração
       port: PORT,
       hot: true,
       host: "0.0.0.0",
       allowedHosts: "all",
       watchFiles: ["src/**", "public/**"],
-      client: {
-        webSocketURL: {
-          protocol: "ws",
-          hostname: "localhost",
-          port: PORT,
-        },
-      },
+      // Não especifica webSocketURL - o webpack-dev-server usa automaticamente
+      // a mesma porta do servidor quando não especificado
     },
     watchOptions: {
       poll: 1000,
