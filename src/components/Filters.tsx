@@ -224,11 +224,7 @@ function Filters({
       {activeFiltersCount > 0 && (
         <div className={styles.filterActions}>
           <div className={styles.clearButtonWrapper}>
-            <Button
-              variant="primary"
-              onClick={onReset}
-              aria-label="Limpar todos os filtros"
-            >
+            <Button variant="primary" onClick={onReset} aria-label="Limpar todos os filtros">
               <span className={styles.clearButtonContent}>
                 <EraserIcon />
                 Limpar Filtros

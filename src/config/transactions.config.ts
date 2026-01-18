@@ -6,4 +6,3 @@
 export function getTransactionDetailsUrl(transactionId: string): string {
   return `/transactions?view=details&id=${encodeURIComponent(transactionId)}`;
 }
-

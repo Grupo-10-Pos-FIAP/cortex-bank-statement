@@ -55,9 +55,7 @@ function TransactionItem({ transaction }: TransactionItemProps) {
           <Text variant="body" weight="medium" className={styles.transactionType}>
             {transactionType}
           </Text>
-          {transaction.status === "Pending" && (
-            <span className={styles.statusBadge}>Pendente</span>
-          )}
+          {transaction.status === "Pending" && <span className={styles.statusBadge}>Pendente</span>}
         </div>
         {personName && (
           <div className={styles.personName}>

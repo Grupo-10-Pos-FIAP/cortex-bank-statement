@@ -40,15 +40,7 @@ export function filterByDateRange(
   return transactions.filter((transaction) => {
     const txDate = new Date(transaction.date);
     const txDateStart = new Date(
-      Date.UTC(
-        txDate.getUTCFullYear(),
-        txDate.getUTCMonth(),
-        txDate.getUTCDate(),
-        0,
-        0,
-        0,
-        0
-      )
+      Date.UTC(txDate.getUTCFullYear(), txDate.getUTCMonth(), txDate.getUTCDate(), 0, 0, 0, 0)
     ).getTime();
 
     if (startTimestamp !== null && endTimestamp !== null) {

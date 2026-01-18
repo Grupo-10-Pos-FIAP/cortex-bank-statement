@@ -137,7 +137,7 @@ export const createInputChangeHandler = (
 ) => {
   return (value: string) => {
     let day: number, month: number, year: number;
-    
+
     if (value.includes("/")) {
       const parts = value.split("/").map(Number);
       if (parts.length !== 3) return;
