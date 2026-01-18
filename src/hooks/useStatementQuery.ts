@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTransactionsQuery } from "./queries/useTransactionsQuery";
 import { TransactionFilters, Transaction, Balance } from "@/types/statement";
@@ -20,9 +20,9 @@ interface UseStatementQueryOptions {
 interface UseStatementQueryReturn {
   balance: Balance | null;
   allTransactions: Transaction[];
-  filteredTransactions: Transaction[];
+  filteredTransactions: Transaction[]; // All filtered transactions (for display with pagination)
   loading: boolean;
-  loadingMore: boolean;
+  loadingMore: boolean; // Always false now, kept for compatibility
   error: ReturnType<typeof useTransactionsQuery>["error"];
   pagination: {
     page: number;
@@ -41,11 +41,12 @@ export function useStatementQuery({
   filters,
 }: UseStatementQueryOptions): UseStatementQueryReturn {
   const queryClient = useQueryClient();
+  const [visibleItemsCount, setVisibleItemsCount] = useState(DEFAULT_PAGE_SIZE);
 
   const transactionsQuery = useTransactionsQuery({ accountId, filters });
 
   const allTransactions = useMemo(() => {
-    return transactionsQuery.data?.pages.flatMap((page) => page.data) || [];
+    return transactionsQuery.data || [];
   }, [transactionsQuery.data]);
 
   const balance = useMemo(() => {
@@ -73,32 +74,33 @@ export function useStatementQuery({
     filters.valueRange,
   ]);
 
-  const pagination = useMemo(() => {
-    const lastPage = transactionsQuery.data?.pages[transactionsQuery.data.pages.length - 1];
-    if (!lastPage) {
-      return {
-        page: 1,
-        pageSize: DEFAULT_PAGE_SIZE,
-        total: 0,
-        totalPages: 0,
-        hasMore: false,
-      };
-    }
+  // Reset visible items when filters change
+  const filteredTotal = filteredTransactions.length;
+  const currentPage = Math.ceil(visibleItemsCount / DEFAULT_PAGE_SIZE);
+  const totalPages = Math.ceil(filteredTotal / DEFAULT_PAGE_SIZE);
 
+  const pagination = useMemo(() => {
     return {
-      page: lastPage.pagination.page,
-      pageSize: lastPage.pagination.pageSize,
-      total: lastPage.pagination.total,
-      totalPages: lastPage.pagination.totalPages,
-      hasMore: transactionsQuery.hasNextPage,
+      page: currentPage,
+      pageSize: DEFAULT_PAGE_SIZE,
+      total: filteredTotal,
+      totalPages,
+      hasMore: visibleItemsCount < filteredTotal,
     };
-  }, [transactionsQuery.data, transactionsQuery.hasNextPage]);
+  }, [currentPage, filteredTotal, totalPages, visibleItemsCount]);
+
+  // Reset visible items count when filters change significantly
+  useMemo(() => {
+    if (filteredTotal < visibleItemsCount) {
+      setVisibleItemsCount(Math.min(DEFAULT_PAGE_SIZE, filteredTotal));
+    }
+  }, [filteredTotal, visibleItemsCount]);
 
   const loadMore = useCallback(() => {
-    if (transactionsQuery.hasNextPage && !transactionsQuery.isFetchingNextPage) {
-      transactionsQuery.fetchNextPage();
+    if (visibleItemsCount < filteredTotal) {
+      setVisibleItemsCount((prev) => Math.min(prev + DEFAULT_PAGE_SIZE, filteredTotal));
     }
-  }, [transactionsQuery]);
+  }, [visibleItemsCount, filteredTotal]);
 
   const refetch = useCallback(() => {
     transactionsQuery.refetch();
@@ -110,12 +112,17 @@ export function useStatementQuery({
     }
   }, [accountId, queryClient]);
 
+  // Return only visible transactions for display (paginated client-side)
+  const visibleTransactions = useMemo(() => {
+    return filteredTransactions.slice(0, visibleItemsCount);
+  }, [filteredTransactions, visibleItemsCount]);
+
   return {
     balance,
     allTransactions,
-    filteredTransactions,
+    filteredTransactions: visibleTransactions,
     loading: transactionsQuery.isLoading,
-    loadingMore: transactionsQuery.isFetchingNextPage,
+    loadingMore: false, // No longer needed since we're not fetching
     error: transactionsQuery.error ?? null,
     pagination,
     loadMore,

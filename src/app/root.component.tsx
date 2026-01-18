@@ -15,11 +15,9 @@ export default function Root(_props: RootProps) {
 
   const loadAccountId = useCallback(() => {
     setLoadingAccount(true);
-    setTimeout(() => {
-      const storedAccountId = getAccountId();
-      setAccountId(storedAccountId);
-      setLoadingAccount(false);
-    }, 0);
+    const storedAccountId = getAccountId();
+    setAccountId(storedAccountId);
+    setLoadingAccount(false);
   }, []);
 
   useEffect(() => {

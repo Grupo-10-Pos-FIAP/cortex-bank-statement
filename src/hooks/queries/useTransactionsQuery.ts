@@ -1,10 +1,8 @@
 import { useMemo } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchTransactions } from "@/api/statement.api";
-import { Transaction, TransactionFilters, PaginatedResponse } from "@/types/statement";
+import { Transaction, TransactionFilters } from "@/types/statement";
 import { classifyError, AppError } from "@/utils/errorHandler";
-
-const DEFAULT_PAGE_SIZE = 25;
 
 interface UseTransactionsQueryOptions {
   accountId: string | null;
@@ -34,6 +32,7 @@ export function useTransactionsQuery({ accountId, filters }: UseTransactionsQuer
   const serializedFilters = useMemo(
     () => serializeFiltersForQueryKey(filters),
     [
+      filters,
       startDateTimestamp,
       endDateTimestamp,
       searchQuery,
@@ -43,32 +42,19 @@ export function useTransactionsQuery({ accountId, filters }: UseTransactionsQuer
     ]
   );
 
-  return useInfiniteQuery<PaginatedResponse<Transaction>, AppError>({
+  return useQuery<Transaction[], AppError>({
     queryKey: ["transactions", accountId, serializedFilters],
-    queryFn: async ({ pageParam = 1 }) => {
+    queryFn: async () => {
       if (!accountId) {
         throw new Error("Account ID is required");
       }
       try {
-        return await fetchTransactions(accountId, {
-          ...filters,
-          pagination: {
-            page: pageParam as number,
-            pageSize: DEFAULT_PAGE_SIZE,
-          },
-        });
+        return await fetchTransactions(accountId);
       } catch (error) {
         throw classifyError(error);
       }
     },
     enabled: !!accountId,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      if (!lastPage.pagination.hasMore) {
-        return undefined;
-      }
-      return lastPage.pagination.page + 1;
-    },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: 3,
