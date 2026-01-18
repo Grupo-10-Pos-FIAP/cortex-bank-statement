@@ -8,7 +8,7 @@ import {
 } from "@/types/statement";
 import { getLast30DaysStart, getLast30DaysEnd } from "@/utils/dateUtils";
 
-interface UseStatementFiltersReturn {
+export interface UseStatementFiltersReturn {
   filters: TransactionFilters;
   debouncedFilters: TransactionFilters;
   updateDateRange: (_start: Date | null, _end: Date | null) => void;

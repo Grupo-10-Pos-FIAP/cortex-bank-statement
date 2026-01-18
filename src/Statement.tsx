@@ -1,19 +1,18 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { Card } from "@grupo10-pos-fiap/design-system";
 import { useStatementQuery } from "@/hooks/useStatementQuery";
 import { useStatementFilters } from "@/hooks/useStatementFilters";
 import { useSearch } from "@/hooks/useSearch";
 import StatementHeader from "@/components/StatementHeader";
-import Search from "@/components/Search";
-import Filters from "@/components/Filters";
-import TransactionList from "@/components/TransactionList";
 import styles from "./Statement.module.css";
+import InvalidAccountCard from "./components/InvalidAccountCard";
+import StatementContent from "./components/StatementContent";
 
 interface StatementProps {
   accountId: string | null;
+  onRefreshAccount?: () => void;
 }
 
-function Statement({ accountId }: StatementProps) {
+function Statement({ accountId, onRefreshAccount }: StatementProps) {
   const [isBalanceVisible, setIsBalanceVisible] = useState<boolean>(true);
 
   const filters = useStatementFilters();
@@ -89,14 +88,8 @@ function Statement({ accountId }: StatementProps) {
     refetchStatement();
   }, [refetchStatement]);
 
-  if (!accountId) {
-    return (
-      <Card title="Extrato" variant="elevated" color="white">
-        <Card.Section>
-          <p>Conta não encontrada</p>
-        </Card.Section>
-      </Card>
-    );
+  if (statement.error) {
+    return <InvalidAccountCard handleClick={onRefreshAccount} />;
   }
 
   return (
@@ -107,51 +100,15 @@ function Statement({ accountId }: StatementProps) {
         onToggleVisibility={handleToggleBalanceVisibility}
         loading={statement.loading && !statement.balance}
       />
-
-      <Card title="Extrato" variant="elevated" color="white" className={styles.card}>
-        <Card.Section className={styles.filtersSection}>
-          <div className={styles.searchWrapper}>
-            <Search
-              value={search.searchQuery}
-              onChange={search.setSearchQuery}
-              placeholder="Buscar por nome, valor ou ID..."
-            />
-          </div>
-          <Filters
-            filters={filters.filters}
-            onDateRangeChange={filters.updateDateRange}
-            onTransactionTypeChange={filters.updateTransactionType}
-            onValueRangeChange={filters.updateValueRange}
-            onReset={filters.resetFilters}
-            activeFiltersCount={filters.activeFiltersCount}
-          />
-        </Card.Section>
-
-        <Card.Section className={styles.content}>
-          <div aria-live="polite" aria-atomic="true" className={styles.srOnly}>
-            {statement.loading &&
-              statement.filteredTransactions.length === 0 &&
-              "Carregando transações"}
-            {statement.error && `Erro: ${statement.error.message}`}
-            {!statement.loading &&
-              !statement.error &&
-              `${statement.filteredTransactions.length} transações exibidas`}
-          </div>
-          <TransactionList
-            transactions={statement.filteredTransactions}
-            loading={statement.loading}
-            error={statement.error}
-            onLoadMore={handleLoadMore}
-            onRetry={handleRetry}
-            isEmpty={
-              statement.filteredTransactions.length === 0 &&
-              !statement.loading &&
-              !statement.pagination.hasMore
-            }
-            hasReachedEnd={hasReachedEnd}
-          />
-        </Card.Section>
-      </Card>
+      <StatementContent
+        statement={statement}
+        filters={filters}
+        search={search}
+        handleLoadMore={handleLoadMore}
+        handleRetry={handleRetry}
+        hasReachedEnd={hasReachedEnd}
+        styles={styles}
+      />
     </div>
   );
 }

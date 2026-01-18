@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDebounce } from "use-debounce";
 
-interface UseSearchReturn {
+export interface UseSearchReturn {
   searchQuery: string;
   debouncedQuery: string;
   setSearchQuery: (_query: string) => void;

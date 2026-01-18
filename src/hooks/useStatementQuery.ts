@@ -17,7 +17,7 @@ interface UseStatementQueryOptions {
   filters: TransactionFilters;
 }
 
-interface UseStatementQueryReturn {
+export interface UseStatementQueryReturn {
   balance: Balance | null;
   allTransactions: Transaction[];
   filteredTransactions: Transaction[];
@@ -58,11 +58,7 @@ export function useStatementQuery({
   const filteredTransactions = useMemo(() => {
     let filtered = [...allTransactions];
 
-    filtered = filterByDateRange(
-      filtered,
-      filters.dateRange.startDate,
-      filters.dateRange.endDate
-    );
+    filtered = filterByDateRange(filtered, filters.dateRange.startDate, filters.dateRange.endDate);
     filtered = filterBySearch(filtered, filters.searchQuery);
     filtered = filterByType(filtered, filters.transactionType);
     filtered = filterByValueRange(filtered, filters.valueRange);
