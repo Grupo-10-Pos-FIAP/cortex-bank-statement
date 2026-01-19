@@ -1,5 +1,6 @@
 import React from "react";
-import { Input, IconButton } from "@grupo10-pos-fiap/design-system";
+import { Input, Button } from "@grupo10-pos-fiap/design-system";
+import { EraserIcon } from "./Filters/EraserIcon";
 import styles from "./Search.module.css";
 
 const MAX_SEARCH_LENGTH = 100;
@@ -35,20 +36,18 @@ function Search({ value, onChange, placeholder = "Buscar transações..." }: Sea
           status="neutral"
           width="100%"
           ariaLabel="Buscar transações"
-          style={{ paddingRight: value ? "40px" : undefined }}
         />
-        {value && (
-          <div className={styles.clearButtonWrapper}>
-            <IconButton
-              icon="X"
-              variant="transparent"
-              size="small"
-              onClick={handleClear}
-              aria-label="Limpar busca"
-            />
-          </div>
-        )}
       </div>
+      {value && (
+        <div className={styles.clearButtonWrapper}>
+          <Button variant="secondary" onClick={handleClear} aria-label="Limpar busca">
+            <span className={styles.clearButtonContent}>
+              <EraserIcon />
+              Limpar busca
+            </span>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
