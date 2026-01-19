@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState, useEffect } from "react";
+import { useMemo, useCallback, useState, useEffect, useRef } from "react";
 import { useTransactionsQuery } from "./queries/useTransactionsQuery";
 import { TransactionFilters, Transaction, Balance, Pagination } from "@/types/statement";
 import {
@@ -30,6 +30,9 @@ export function useStatementQuery({
   filters,
 }: UseStatementQueryOptions): UseStatementQueryReturn {
   const [visibleItemsCount, setVisibleItemsCount] = useState(DEFAULT_PAGE_SIZE);
+  const lastVisibleTransactionIdRef = useRef<string | null>(null);
+  const previousLastVisibleTransactionIdRef = useRef<string | null>(null);
+  const previousFilteredTotalRef = useRef<number>(0);
 
   const transactionsQuery = useTransactionsQuery({ accountId, filters });
 
@@ -79,10 +82,21 @@ export function useStatementQuery({
   useEffect(() => {
     if (filteredTotal < visibleItemsCount) {
       setVisibleItemsCount(Math.min(DEFAULT_PAGE_SIZE, filteredTotal));
-    } else if (filteredTotal > 0 && visibleItemsCount === 0) {
+    } 
+    else if (filteredTotal > previousFilteredTotalRef.current && previousLastVisibleTransactionIdRef.current !== null && visibleItemsCount > 0) {
+      const previousLastVisibleId = previousLastVisibleTransactionIdRef.current;
+      const lastVisibleIndex = filteredTransactions.findIndex(t => t.id === previousLastVisibleId);
+      
+      if (lastVisibleIndex >= 0 && lastVisibleIndex >= visibleItemsCount) {
+        setVisibleItemsCount(Math.min(lastVisibleIndex + 1, filteredTotal));
+      }
+    }
+    else if (filteredTotal > 0 && visibleItemsCount === 0) {
       setVisibleItemsCount(Math.min(DEFAULT_PAGE_SIZE, filteredTotal));
     }
-  }, [filteredTotal, visibleItemsCount]);
+    
+    previousFilteredTotalRef.current = filteredTotal;
+  }, [filteredTotal, visibleItemsCount, filteredTransactions]);
 
   const loadMore = useCallback(() => {
     if (visibleItemsCount < filteredTotal) {
@@ -95,7 +109,17 @@ export function useStatementQuery({
   }, [transactionsQuery]);
 
   const visibleTransactions = useMemo(() => {
-    return filteredTransactions.slice(0, visibleItemsCount);
+    const result = filteredTransactions.slice(0, visibleItemsCount);
+    
+    if (result.length > 0 && lastVisibleTransactionIdRef.current !== null) {
+      previousLastVisibleTransactionIdRef.current = lastVisibleTransactionIdRef.current;
+    }
+    
+    if (result.length > 0) {
+      lastVisibleTransactionIdRef.current = result[result.length - 1].id;
+    }
+    
+    return result;
   }, [filteredTransactions, visibleItemsCount]);
 
   const isLoading =
