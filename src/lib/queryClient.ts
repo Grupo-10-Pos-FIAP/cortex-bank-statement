@@ -23,9 +23,33 @@ export function createQueryClient(): QueryClient {
 
 let queryClientInstance: QueryClient | null = null;
 
+function getSharedQueryClient(): QueryClient | null {
+  if (typeof window !== "undefined" && (window as any).__REACT_QUERY_CLIENT__) {
+    const sharedClient = (window as any).__REACT_QUERY_CLIENT__;
+    if (sharedClient && typeof sharedClient.invalidateQueries === "function") {
+      return sharedClient;
+    }
+    delete (window as any).__REACT_QUERY_CLIENT__;
+  }
+  return null;
+}
+
+function setSharedQueryClient(client: QueryClient): void {
+  if (typeof window !== "undefined") {
+    (window as any).__REACT_QUERY_CLIENT__ = client;
+  }
+}
+
 export function getQueryClient(): QueryClient {
+  const sharedClient = getSharedQueryClient();
+  if (sharedClient) {
+    queryClientInstance = sharedClient;
+    return sharedClient;
+  }
+
   if (!queryClientInstance) {
     queryClientInstance = createQueryClient();
+    setSharedQueryClient(queryClientInstance);
   }
   return queryClientInstance;
 }
