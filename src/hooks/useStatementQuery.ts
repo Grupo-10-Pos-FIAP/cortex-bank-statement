@@ -62,7 +62,6 @@ export function useStatementQuery({
     filters.valueRange,
   ]);
 
-  // Reset visible items when filters change
   const filteredTotal = filteredTransactions.length;
   const currentPage = Math.ceil(visibleItemsCount / DEFAULT_PAGE_SIZE);
   const totalPages = Math.ceil(filteredTotal / DEFAULT_PAGE_SIZE);
@@ -77,7 +76,6 @@ export function useStatementQuery({
     };
   }, [currentPage, filteredTotal, totalPages, visibleItemsCount]);
 
-  // Reset visible items count when filters change significantly
   useEffect(() => {
     if (filteredTotal < visibleItemsCount) {
       setVisibleItemsCount(Math.min(DEFAULT_PAGE_SIZE, filteredTotal));
@@ -94,15 +92,18 @@ export function useStatementQuery({
     transactionsQuery.refetch();
   }, [transactionsQuery]);
 
-  // Return only visible transactions for display (paginated client-side)
   const visibleTransactions = useMemo(() => {
     return filteredTransactions.slice(0, visibleItemsCount);
   }, [filteredTransactions, visibleItemsCount]);
 
+  const isLoading =
+    transactionsQuery.isLoading ||
+    (transactionsQuery.isFetching && !transactionsQuery.data && !transactionsQuery.error);
+
   return {
     balance,
     filteredTransactions: visibleTransactions,
-    loading: transactionsQuery.isLoading,
+    loading: isLoading,
     error: transactionsQuery.error ?? null,
     pagination,
     loadMore,
