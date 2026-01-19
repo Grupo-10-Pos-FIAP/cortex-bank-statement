@@ -13,7 +13,6 @@ interface TransactionItemProps {
 function TransactionItem({ transaction }: TransactionItemProps) {
   const isCredit = transaction.type === "Credit";
   const transactionType = isCredit ? "Transferência recebida" : "Transferência efetuada";
-  const personName = isCredit ? transaction.from : transaction.to;
   const displayValue = formatValue(Math.abs(transaction.value));
   const formattedDate = formatDate(transaction.date);
 
@@ -57,11 +56,13 @@ function TransactionItem({ transaction }: TransactionItemProps) {
           </Text>
           {transaction.status === "Pending" && <span className={styles.statusBadge}>Pendente</span>}
         </div>
-        {personName && (
+        {(transaction.from || transaction.to) && (
           <div className={styles.personName}>
             <Icon name="User" size="small" color="gray600" />
             <Text variant="caption" color="gray600">
-              de {personName}
+              {transaction.from && `De ${transaction.from}`}
+              {transaction.from && transaction.to && " • "}
+              {transaction.to && `Para ${transaction.to}`}
             </Text>
           </div>
         )}
