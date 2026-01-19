@@ -9,7 +9,7 @@ import {
 import { getLast30DaysStart, getLast30DaysEnd } from "@/utils/dateUtils";
 import { DEBOUNCE_DELAY_FILTERS } from "@/constants";
 
-interface UseStatementFiltersReturn {
+export interface UseStatementFiltersReturn {
   filters: TransactionFilters;
   debouncedFilters: TransactionFilters;
   updateDateRange: (_start: Date | null, _end: Date | null) => void;

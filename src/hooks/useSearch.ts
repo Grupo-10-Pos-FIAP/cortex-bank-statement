@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDebounce } from "use-debounce";
 import { DEBOUNCE_DELAY_SEARCH } from "@/constants";
 
-interface UseSearchReturn {
+export interface UseSearchReturn {
   searchQuery: string;
   debouncedQuery: string;
   setSearchQuery: (_query: string) => void;

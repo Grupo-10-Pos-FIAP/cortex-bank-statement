@@ -15,7 +15,7 @@ interface UseStatementQueryOptions {
   filters: TransactionFilters;
 }
 
-interface UseStatementQueryReturn {
+export interface UseStatementQueryReturn {
   balance: Balance | null;
   filteredTransactions: Transaction[];
   loading: boolean;

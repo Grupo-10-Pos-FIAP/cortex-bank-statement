@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, Loading, Button, Card } from "@grupo10-pos-fiap/design-system";
+import { Loading } from "@grupo10-pos-fiap/design-system";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { getAccountId } from "@/utils/accountStorage";
 import Statement from "../Statement";
 import styles from "./root.component.module.css";
+import InvalidAccountCard from "@/components/InvalidAccountCard";
 
 export default function Root() {
   const [accountId, setAccountId] = useState<string | null>(null);
@@ -55,16 +56,18 @@ export default function Root() {
     };
   }, []);
 
-  const handleRefresh = useCallback(() => {
-    loadAccountId();
-  }, [loadAccountId]);
+  const handleRefreshAccount = useCallback(() => {
+    window.location.reload();
+  }, []);
 
   if (loadingAccount) {
     return (
       <QueryProvider>
-        <div className={styles.container}>
-          <Loading text="Carregando..." size="medium" />
-        </div>
+        <QueryProvider>
+          <div className={styles.container}>
+            <Loading text="Carregando..." size="medium" />
+          </div>
+        </QueryProvider>
       </QueryProvider>
     );
   }
@@ -72,29 +75,7 @@ export default function Root() {
   if (!accountId) {
     return (
       <QueryProvider>
-        <div className={styles.container}>
-          <Card title="Extrato" variant="elevated" color="white">
-            <Card.Section>
-              <div style={{ textAlign: "center", padding: "var(--spacing-xl)" }}>
-                <Text
-                  variant="subtitle"
-                  weight="semibold"
-                  color="error"
-                  style={{ marginBottom: "var(--spacing-md)" }}
-                >
-                  Conta não identificada
-                </Text>
-                <Text variant="body" color="gray600" style={{ marginBottom: "var(--spacing-lg)" }}>
-                  Não foi possível identificar a conta. Por favor, verifique se o accountId está
-                  armazenado no localStorage.
-                </Text>
-                <Button variant="primary" onClick={handleRefresh} width="90px">
-                  Atualizar Tela
-                </Button>
-              </div>
-            </Card.Section>
-          </Card>
-        </div>
+        <InvalidAccountCard handleClick={handleRefreshAccount} />
       </QueryProvider>
     );
   }
@@ -102,7 +83,7 @@ export default function Root() {
   return (
     <QueryProvider>
       <div className={styles.container}>
-        <Statement accountId={accountId} />
+        <Statement accountId={accountId} onRefreshAccount={handleRefreshAccount} />
       </div>
     </QueryProvider>
   );
