@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import styles from "./InvalidAccountCard.module.css";
-import { Card, Text, Button } from '@grupo10-pos-fiap/design-system';
+import { Card, Text, Button } from "@grupo10-pos-fiap/design-system";
 
 interface InvalidAccountCardProps {
   handleClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -20,16 +20,9 @@ const InvalidAccountCard: React.FC<InvalidAccountCardProps> = ({ handleClick }) 
             >
               Conta não identificada
             </Text>
-            <Text
-              variant="body"
-              color="gray600"
-              style={{ marginBottom: "var(--spacing-lg)" }}
-            >
-              Ocorreu um problema inesperado. Por favor, entre em contato com o
-              suporte através do email:{" "}
-              <a href="mailto:cortexbank.contato@gmail.com">
-                cortexbank.contato@gmail.com
-              </a>
+            <Text variant="body" color="gray600" style={{ marginBottom: "var(--spacing-lg)" }}>
+              Ocorreu um problema inesperado. Por favor, entre em contato com o suporte através do
+              email: <a href="mailto:cortexbank.contato@gmail.com">cortexbank.contato@gmail.com</a>
             </Text>
             <Button variant="primary" onClick={handleClick} width="140px">
               Atualizar Tela
@@ -39,6 +32,6 @@ const InvalidAccountCard: React.FC<InvalidAccountCardProps> = ({ handleClick }) 
       </Card>
     </div>
   );
-}
+};
 
 export default InvalidAccountCard;
