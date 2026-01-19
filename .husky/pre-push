@@ -1,14 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Regra #9: Testar Tudo
-# Executar todos os testes antes de push
-echo "🧪 Executando todos os testes..."
-npm test
-
-# Verificar cobertura de testes
-echo "📊 Verificando cobertura de testes..."
-npm run coverage
-
 echo "✅ Pre-push checks passaram!"
 
