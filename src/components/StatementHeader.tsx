@@ -34,10 +34,11 @@ function StatementHeader({
           aria-label={isVisible ? "Ocultar saldo" : "Mostrar saldo"}
         />
       </div>
-      <div className={styles.content}>
-        {loading ? (
-          <Loading text="Carregando..." size="small" />
-        ) : (
+
+      {loading ? (
+        <Loading text="Carregando..." size="small" />
+      ) : (
+        <div className={styles.content}>
           <Card.Section>
             <Text variant="h2" weight="bold" className={styles.balance}>
               {displayValue}
@@ -48,8 +49,8 @@ function StatementHeader({
               </Text>
             )}
           </Card.Section>
-        )}
-      </div>
+        </div>
+      )}
     </Card>
   );
 }
