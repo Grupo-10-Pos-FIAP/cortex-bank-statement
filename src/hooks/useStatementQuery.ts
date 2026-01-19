@@ -79,6 +79,9 @@ export function useStatementQuery({
   useEffect(() => {
     if (filteredTotal < visibleItemsCount) {
       setVisibleItemsCount(Math.min(DEFAULT_PAGE_SIZE, filteredTotal));
+    } else if (filteredTotal > 0 && visibleItemsCount === 0) {
+      // Quando dados chegam pela primeira vez e visibleItemsCount está 0, restaurar para mostrar itens
+      setVisibleItemsCount(Math.min(DEFAULT_PAGE_SIZE, filteredTotal));
     }
   }, [filteredTotal, visibleItemsCount]);
 
