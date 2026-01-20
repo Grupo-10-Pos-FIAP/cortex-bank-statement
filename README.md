@@ -2,11 +2,11 @@
 
 Microfrontend de extrato bancário desenvolvido como parte do projeto Cortex Bank para a pós-graduação em Engenharia de Software Frontend.
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 Este é um microfrontend responsável pelo módulo de extrato bancário do sistema Cortex Bank. A aplicação permite visualizar transações financeiras com sistema avançado de filtros, busca textual, paginação client-side e performance otimizada para grandes volumes de dados.
 
-## 🏗️ Arquitetura
+## Arquitetura
 
 A aplicação foi desenvolvida utilizando a arquitetura de **microfrontends** com **Single-SPA**, permitindo:
 
@@ -15,7 +15,7 @@ A aplicação foi desenvolvida utilizando a arquitetura de **microfrontends** co
 - **Reutilização de componentes**: Utiliza o Design System compartilhado `@grupo10-pos-fiap/design-system`
 - **Código Limpo**: Projeto refatorado seguindo princípios de Clean Code, SOLID e KISS
 
-## 🚀 Tecnologias
+## Tecnologias
 
 - **React 19.2.0** - Biblioteca para construção da interface
 - **TypeScript 4.3.5** - Tipagem estática
@@ -28,7 +28,7 @@ A aplicação foi desenvolvida utilizando a arquitetura de **microfrontends** co
 - **ESLint + Prettier** - Linting e formatação de código
 - **Husky** - Git hooks para qualidade de código
 
-## 📦 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 statement/
@@ -37,19 +37,25 @@ statement/
 │   ├── app/              # Componente raiz e configuração
 │   ├── components/       # Componentes React reutilizáveis
 │   │   ├── DateRangePicker/  # Seletor de período de datas
-│   │   ├── Filters.tsx       # Componente de filtros
-│   │   ├── Search.tsx       # Campo de busca
-│   │   ├── StatementHeader.tsx  # Header com saldo
-│   │   ├── TransactionList.tsx  # Lista de transações
-│   │   └── TransactionItem.tsx   # Item individual de transação
+│   │   ├── Filters/      # Componente de filtros
+│   │   ├── ErrorMessage.tsx          # Mensagem de Erro
+│   │   ├── Filters.tsx               # Componente de Filtros
+│   │   ├── InvalidAccountCard.tsx    # Card de Conta Inválida
+│   │   ├── Search.tsx                # Campo de busca
+│   │   ├── StatementHeader.tsx       # Header com saldo
+│   │   └── TransactionItem.tsx       # Item individual de transação
+│   │   ├── TransactionList.tsx       # Lista de transações
 │   ├── config/           # Configurações (API, transações)
 │   ├── constants/         # Constantes da aplicação
-│   ├── hooks/            # Custom hooks
+│   ├── hooks/            # Hooks Customizados
 │   │   ├── queries/      # Hooks de queries (React Query)
 │   │   ├── useStatementQuery.ts
 │   │   ├── useStatementFilters.ts
 │   │   ├── useSearch.ts
 │   │   └── useInfiniteScrollTrigger.ts
+│   ├── lib/              # Client Queries
+│   ├── providers/        # Providers
+│   ├── scripts/          # Scripts
 │   ├── types/            # Definições TypeScript
 │   ├── utils/            # Funções utilitárias
 │   └── styles/           # Estilos globais
@@ -59,7 +65,7 @@ statement/
 └── package.json          # Dependências e scripts
 ```
 
-## 🎯 Funcionalidades
+## Funcionalidades
 
 ### Extrato Bancário
 
@@ -98,8 +104,7 @@ statement/
 
 ### Pré-requisitos
 
-- Node.js (versão 16 ou superior)
-- npm ou yarn
+- Node.js (versão 20 ou superior)
 
 ### Passos
 
@@ -130,7 +135,7 @@ USE_MOCK=false
 MOCK_API_BASE_URL=http://localhost:8080
 ```
 
-## 🚀 Executando a Aplicação
+## Executando a Aplicação
 
 ### Modo Standalone (Desenvolvimento)
 
@@ -179,7 +184,7 @@ Executa em modo standalone apontando para backend local:
 npm run start:backend
 ```
 
-## 📝 Scripts Disponíveis
+## Scripts Disponíveis
 
 | Script                     | Descrição                                                               |
 | -------------------------- | ----------------------------------------------------------------------- |
@@ -196,7 +201,7 @@ npm run start:backend
 | `npm run check-format`     | Verifica formatação sem alterar arquivos                                |
 | `npm run analyze`          | Analisa o bundle gerado                                                 |
 
-## 🏗️ Build de Produção
+## Build de Produção
 
 Para gerar o build de produção:
 
@@ -206,7 +211,7 @@ npm run build
 
 Os arquivos serão gerados no diretório `dist/`.
 
-## 🔧 Configuração
+## Configuração
 
 ### Variáveis de Ambiente
 
@@ -228,7 +233,7 @@ A aplicação utiliza autenticação via Bearer token (JWT) quando conectada ao 
 - O token é automaticamente incluído no header `Authorization: Bearer {token}` em todas as requisições
 - **Mock Server**: Não requer autenticação (permite todas as requisições em modo desenvolvimento)
 
-## 📚 Estrutura de Componentes
+## Estrutura de Componentes
 
 ### Componentes Principais
 
@@ -249,7 +254,7 @@ A aplicação utiliza autenticação via Bearer token (JWT) quando conectada ao 
 - **`useSearch`**: Gerencia busca textual com debounce
 - **`useInfiniteScrollTrigger`**: Trigger para scroll infinito
 
-## 🔌 Integração com Single-SPA
+## Integração com Single-SPA
 
 A aplicação está configurada para ser registrada no Single-SPA:
 
@@ -264,7 +269,7 @@ registerApplication({
 });
 ```
 
-## 📡 API
+## API
 
 A aplicação consome os seguintes endpoints:
 
@@ -278,7 +283,7 @@ A aplicação consome os seguintes endpoints:
 - ❌ **Não possui endpoint dedicado para balance**: O balance é calculado localmente no frontend a partir das transações retornadas.
 - ⚠️ **Status code incorreto**: O backend retorna `201` (Created) em vez de `200` (OK) para GET statement (problema conhecido do backend).
 
-## 🎨 Design System
+## Design System
 
 A aplicação utiliza o Design System `@grupo10-pos-fiap/design-system`, que fornece:
 
@@ -286,7 +291,7 @@ A aplicação utiliza o Design System `@grupo10-pos-fiap/design-system`, que for
 - Tokens de design (cores, espaçamentos, tipografia)
 - Consistência visual entre microfrontends
 
-## 🔒 Qualidade de Código
+## Qualidade de Código
 
 O projeto utiliza:
 
@@ -296,7 +301,7 @@ O projeto utiliza:
 - **TypeScript**: Tipagem estática para maior segurança
 - **Clean Code, SOLID, KISS**: Princípios aplicados na arquitetura
 
-## 🚢 Deploy
+## Deploy
 
 O projeto está configurado para deploy no Vercel. O workflow de CI/CD está em `.github/workflows/vercel-deploy-check.yml`.
 
@@ -310,8 +315,12 @@ npm run build
 vercel --prod
 ```
 
-## 📄 Licença
+## Licença
 
-Este projeto foi desenvolvido como parte de uma pós-graduação em Engenharia de Software Frontend.
+Este projeto foi desenvolvido como parte do trabalho de pós-graduação em Engenharia de Front End.
 
----
+## Autores
+
+- [Gabrielle Martins](https://github.com/Gabrielle-96)
+- [Helen Cris](https://github.com/HelenCrisM)
+
