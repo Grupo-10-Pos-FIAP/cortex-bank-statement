@@ -77,14 +77,24 @@ export function filterByValueRange(
     return transactions;
   }
 
+  const processedMin = valueRange.min !== undefined && valueRange.min > 0 ? valueRange.min : undefined;
+  const processedMax = valueRange.max !== undefined && valueRange.max > 0 ? valueRange.max : undefined;
+
+  if (processedMin === undefined && processedMax === undefined) {
+    return transactions;
+  }
+
   return transactions.filter((transaction) => {
     const absoluteValue = Math.abs(transaction.value);
-    if (valueRange.min !== undefined && absoluteValue < valueRange.min) {
+
+    if (processedMin !== undefined && absoluteValue < processedMin) {
       return false;
     }
-    if (valueRange.max !== undefined && absoluteValue > valueRange.max) {
+
+    if (processedMax !== undefined && absoluteValue > processedMax) {
       return false;
     }
+
     return true;
   });
 }

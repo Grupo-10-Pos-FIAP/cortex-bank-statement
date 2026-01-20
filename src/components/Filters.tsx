@@ -7,7 +7,7 @@ import { maskCurrency, unmaskCurrency } from "@/utils/formatters";
 import { EraserIcon } from "./Filters/EraserIcon";
 import styles from "./Filters.module.css";
 
-const MAX_VALUE = 999999.99;
+const MAX_VALUE = 999999999.99;
 
 const TRANSACTION_TYPE_OPTIONS = [
   { label: "Todas", value: "all" },
